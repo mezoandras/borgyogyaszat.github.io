@@ -8,22 +8,125 @@
         <meta name="description" content="Dr. Krizsa Judit - Bőrgyógyász">
         <meta name="keywords" content="bőrgyógyász, magánrendelés, dr krizsa judit, bőr, szeged, ovos, rendelés, magán, anyajegy, pattanás, mitesszer, probléma,">
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-        
-		
-		<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q93L387XH3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-Q93L387XH3');
-</script>
-
 
 
         
 	</head>
+	
+	
+<style>
+  :root{
+    --nybar-bg:#ffffff;
+    --nybar-fg:#111827;
+    --nybar-link:#1d4ed8;
+    --nybar-border:rgba(17,24,39,.14);
+    --nybar-shadow:0 -6px 24px rgba(0,0,0,.08);
+    --nybar-btn-hover:rgba(17,24,39,.06);
+  }
+
+  .nybar{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:9999;
+
+    background:var(--nybar-bg);
+    color:var(--nybar-fg);
+    border-top:1px solid var(--nybar-border);
+    box-shadow:var(--nybar-shadow);
+
+    padding:12px 52px 12px 16px;
+    font:14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  }
+
+  .nybar__content{
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .nybar__text{ margin:0; }
+
+  .nybar__link{
+    color:var(--nybar-link);
+    text-decoration:underline;
+    font-weight:600;
+    white-space:nowrap;
+  }
+
+  .nybar__close{
+    position:absolute;
+    top:50%;
+    right:10px;
+    transform:translateY(-50%);
+
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    border:1px solid var(--nybar-border);
+    background:transparent;
+    color:var(--nybar-fg);
+
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:18px;
+    line-height:1;
+  }
+
+  .nybar__close:hover{ background:var(--nybar-btn-hover); }
+
+  .nybar__link:focus,
+  .nybar__close:focus{
+    outline:2px solid rgba(29,78,216,.35);
+    outline-offset:2px;
+  }
+
+  body{ padding-bottom:66px; }
+</style>
+
+<aside class="nybar" id="nybar" role="region" aria-label="Árlista információ">
+  <button class="nybar__close" type="button" aria-label="Bezárás" id="nybarClose">×</button>
+
+  <div class="nybar__content">
+    <p class="nybar__text">
+      2026-tól érvényes áraink megtekinthetők itt:
+      <a class="nybar__link" href="http://borgyogyasz.at/arlista.pdf" target="_blank" rel="noopener">
+        2026 árlista
+      </a>
+    </p>
+  </div>
+</aside>
+
+<script>
+  (function () {
+    const bar = document.getElementById('nybar');
+    const btn = document.getElementById('nybarClose');
+
+    const key = 'nybarDismissed';
+    if (localStorage.getItem(key) === '1') {
+      bar.style.display = 'none';
+      return;
+    }
+
+    btn.addEventListener('click', function () {
+      bar.style.display = 'none';
+      localStorage.setItem(key, '1');
+    });
+  })();
+</script>
+
+
+
+	
+	
+	
 	<body class="is-preload">
 
 		<!-- Wrapper -->
