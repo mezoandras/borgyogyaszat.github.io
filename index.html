@@ -13,97 +13,36 @@
         
 	</head>
 	
-	<style>
-   .vacation-bar {
-       position: fixed;
-       top: 0;
-       left: 0;
-       width: 100%;
-       background: linear-gradient(90deg, #f97316, #ea580c);
-       color: white;
-       text-align: center;
-       padding: 14px 20px;
-       font-size: 16px;
-       font-weight: 600;
-       box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-       z-index: 9999;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       gap: 12px;
-       transition: all 0.4s ease;
-   }
 
-   .vacation-bar .close-btn {
-       position: absolute;
-       right: 18px;
-       background: none;
-       border: none;
-       color: white;
-       font-size: 24px;
-       cursor: pointer;
-       opacity: 0.85;
-       padding: 0;
-       line-height: 1;
-       width: 28px;
-       height: 28px;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-   }
 
-   .vacation-bar .close-btn:hover {
-       opacity: 1;
-       transform: scale(1.1);
-   }
 
-   body {
-       padding-top: 56px; /* kicsit több hely, biztonság kedvéért */
-   }
-
-   @media (max-width: 768px) {
-       .vacation-bar {
-           font-size: 15px;
-           padding: 12px 16px;
-       }
-       body { padding-top: 52px; }
-   }
+<style>
+  .vacation-bar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background: linear-gradient(90deg,#f97316,#ea580c);
+      color: #fff;
+      text-align: center;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(0,0,0,.25);
+      z-index: 9999;
+  }
+  body { padding-top: 56px; }
+  @media (max-width:768px){
+      .vacation-bar{font-size:15px;padding:12px 16px;}
+      body{padding-top:52px;}
+  }
 </style>
+</head>
 
-<!-- SZABADSÁG SÁV -->
-<div class="vacation-bar" id="vacationBar">
-   <span>Ezúton tájékoztatjuk Önöket, hogy rendelésünk <strong>2026. június 8-ig szünetel</strong>.</span>
-   <button class="close-btn" aria-label="Bezárás" onclick="closeVacationBar()">✕</button>
-</div>
-
-<script>
-   function closeVacationBar() {
-       const bar = document.getElementById('vacationBar');
-       if (bar) {
-           bar.style.opacity = '0';
-           setTimeout(() => {
-               bar.style.display = 'none';
-           }, 400);
-       }
-
-       try {
-           localStorage.setItem('vacationBarClosed', 'true');
-       } catch (e) {}
-   }
-
-   // Oldal betöltésekor ellenőrizzük
-   window.addEventListener('load', () => {
-       try {
-           if (localStorage.getItem('vacationBarClosed') === 'true') {
-               const bar = document.getElementById('vacationBar');
-               if (bar) bar.style.display = 'none';
-           }
-       } catch (e) {
-           console.warn("localStorage nem elérhető.");
-       }
-   });
-</script>
-
+<body>
+  <div class="vacation-bar">
+      Ezúton tájékoztatjuk Önöket, hogy rendelésünk <strong>2026. június 8-ig szünetel</strong>.
+  </div>
+	
 	
 	
 	
