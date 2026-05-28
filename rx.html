@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receptkérés</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.5;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    form {
+      background: #fff;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .checkbox-row {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-weight: normal;
+    }
+
+    .checkbox-row input {
+      margin-top: 4px;
+    }
+
+    button {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px;
+      font-size: 17px;
+      border: none;
+      border-radius: 6px;
+      background: #1f6feb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #185abc;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #555;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form id="prescriptionForm">
+    <h1>Receptkérés</h1>
+
+    <label for="name">Név</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="taj">TAJ-szám</label>
+    <input
+      type="text"
+      id="taj"
+      name="taj"
+      required
+      pattern="[0-9]{9}"
+      maxlength="9"
+      inputmode="numeric"
+      placeholder="9 számjegy"
+    >
+
+    <label for="medicine">Kért recept / gyógyszer neve</label>
+    <textarea id="medicine" name="medicine" required></textarea>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="recentPrescription" required>
+      <span>A kért gyógyszer 3 hónapon belül fel volt írva számomra.</span>
+    </label>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="feeAccepted" required>
+      <span>Megértettem, hogy a recept díja 5000 Ft / recept.</span>
+    </label>
+
+    <button type="submit">Küldés</button>
+
+    <p class="note">
+      Az oldal nem használ sütiket, nyomkövetőt vagy külső szolgáltatást.
+      A küldés a saját e-mail alkalmazásán keresztül történik.
+    </p>
+  </form>
+
+  <script>
+    function generateRxCode(length = 12) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const array = new Uint32Array(length);
+      crypto.getRandomValues(array);
+
+      let code = "";
+      for (let i = 0; i < length; i++) {
+        code += chars[array[i] % chars.length];
+      }
+
+      return code;
+    }
+
+    document.getElementById("prescriptionForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const recipientEmail = "rendelo@example.hu"; 
+      // IDE ÍRD BE A SAJÁT E-MAIL CÍMEDET
+
+      const name = document.getElementById("name").value.trim();
+      const taj = document.getElementById("taj").value.trim();
+      const medicine = document.getElementById("medicine").value.trim();
+
+      const rxCode = "RX-" + generateRxCode(12);
+
+      const subject = rxCode;
+
+      const body =
+        "Receptkérés adatai:%0D%0A%0D%0A" +
+        "Név: " + encodeURIComponent(name) + "%0D%0A" +
+        "TAJ-szám: " + encodeURIComponent(taj) + "%0D%0A" +
+        "Kért recept / gyógyszer: " + encodeURIComponent(medicine) + "%0D%0A%0D%0A" +
+        "Nyilatkozatok:%0D%0A" +
+        "- A kért gyógyszer 3 hónapon belül fel volt írva.%0D%0A" +
+        "- A páciens megértette, hogy a recept díja 5000 Ft / recept.%0D%0A%0D%0A" +
+        "Azonosító: " + encodeURIComponent(rxCode);
+
+      const mailtoLink =
+        "mailto:" + encodeURIComponent(recipientEmail) +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + body;
+
+      window.location.href = mailtoLink;
+    });
+  </script>
+
+</body>
+</html>
