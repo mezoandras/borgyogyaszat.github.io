@@ -6,21 +6,67 @@
   <title>Receptkérés</title>
 
   <style>
+    :root {
+      --bg: #f7f7f7;
+      --card: #ffffff;
+      --text: #222222;
+      --muted: #555555;
+      --border: #cccccc;
+      --button: #1f6feb;
+      --button-hover: #185abc;
+      --shadow: rgba(0,0,0,0.08);
+    }
+
+    body.dark {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #f1f1f1;
+      --muted: #b8b8b8;
+      --border: #444444;
+      --button: #4f8cff;
+      --button-hover: #3d78df;
+      --shadow: rgba(0,0,0,0.35);
+    }
+
     body {
       font-family: Arial, sans-serif;
       max-width: 640px;
       margin: 40px auto;
       padding: 20px;
       line-height: 1.5;
-      background: #f7f7f7;
-      color: #222;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .icon-button {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .icon-button:hover {
+      opacity: 0.85;
     }
 
     form {
-      background: #fff;
+      background: var(--card);
       padding: 24px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 10px var(--shadow);
     }
 
     h1 {
@@ -39,10 +85,12 @@
       width: 100%;
       padding: 10px;
       margin-top: 6px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
       border-radius: 6px;
       font-size: 16px;
       box-sizing: border-box;
+      background: var(--card);
+      color: var(--text);
     }
 
     textarea {
@@ -62,25 +110,25 @@
       margin-top: 4px;
     }
 
-    button {
+    button[type="submit"] {
       margin-top: 24px;
       width: 100%;
       padding: 14px;
       font-size: 17px;
       border: none;
       border-radius: 6px;
-      background: #1f6feb;
+      background: var(--button);
       color: white;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #185abc;
+    button[type="submit"]:hover {
+      background: var(--button-hover);
     }
 
     .note {
       font-size: 14px;
-      color: #555;
+      color: var(--muted);
       margin-top: 12px;
     }
   </style>
@@ -88,13 +136,23 @@
 
 <body>
 
-  <form id="prescriptionForm">
-    <h1>Receptkérés</h1>
+  <div class="top-bar">
+    <button id="darkModeToggle" class="icon-button" type="button" aria-label="Sötét mód váltása">
+      🌙
+    </button>
 
-    <label for="name">Név</label>
+    <button id="languageToggle" class="icon-button" type="button" aria-label="Nyelv váltása">
+      🇭🇺
+    </button>
+  </div>
+
+  <form id="prescriptionForm">
+    <h1 data-i18n="title">Receptkérés</h1>
+
+    <label for="name" data-i18n="nameLabel">Név</label>
     <input type="text" id="name" name="name" required>
 
-    <label for="taj">TAJ-szám</label>
+    <label for="taj" data-i18n="tajLabel">TAJ-szám</label>
     <input
       type="text"
       id="taj"
@@ -104,30 +162,80 @@
       maxlength="9"
       inputmode="numeric"
       placeholder="9 számjegy"
+      data-i18n-placeholder="tajPlaceholder"
     >
 
-    <label for="medicine">Kért recept / gyógyszer neve</label>
+    <label for="medicine" data-i18n="medicineLabel">Kért recept / gyógyszer neve</label>
     <textarea id="medicine" name="medicine" required></textarea>
 
     <label class="checkbox-row">
       <input type="checkbox" id="recentPrescription" required>
-      <span>A kért gyógyszer 3 hónapon belül fel volt írva számomra.</span>
+      <span data-i18n="recentText">A kért gyógyszer 3 hónapon belül fel volt írva számomra.</span>
     </label>
 
     <label class="checkbox-row">
       <input type="checkbox" id="feeAccepted" required>
-      <span>Megértettem, hogy a recept díja 5000 Ft / recept.</span>
+      <span data-i18n="feeText">Megértettem, hogy a recept díja 5000 Ft / recept.</span>
     </label>
 
-    <button type="submit">Küldés</button>
+    <button type="submit" data-i18n="sendButton">Küldés</button>
 
-    <p class="note">
+    <p class="note" data-i18n="note">
       Az oldal nem használ sütiket, nyomkövetőt vagy külső szolgáltatást.
       A küldés a saját e-mail alkalmazásán keresztül történik.
     </p>
   </form>
 
   <script>
+    const translations = {
+      hu: {
+        pageTitle: "Receptkérés",
+        title: "Receptkérés",
+        nameLabel: "Név",
+        tajLabel: "TAJ-szám",
+        tajPlaceholder: "9 számjegy",
+        medicineLabel: "Kért recept / gyógyszer neve",
+        recentText: "A kért gyógyszer 3 hónapon belül fel volt írva számomra.",
+        feeText: "Megértettem, hogy a recept díja 5000 Ft / recept.",
+        sendButton: "Küldés",
+        note: "Az oldal nem használ sütiket, nyomkövetőt vagy külső szolgáltatást. A küldés a saját e-mail alkalmazásán keresztül történik.",
+        emailIntro: "Receptkérés adatai:",
+        emailName: "Név",
+        emailTaj: "TAJ-szám",
+        emailMedicine: "Kért recept / gyógyszer",
+        emailStatements: "Nyilatkozatok:",
+        emailRecent: "- A kért gyógyszer 3 hónapon belül fel volt írva.",
+        emailFee: "- A páciens megértette, hogy a recept díja 5000 Ft / recept.",
+        emailId: "Azonosító",
+        darkModeLabel: "Sötét mód váltása",
+        languageLabel: "Nyelv váltása"
+      },
+      en: {
+        pageTitle: "Prescription Request",
+        title: "Prescription Request",
+        nameLabel: "Name",
+        tajLabel: "Hungarian TAJ number",
+        tajPlaceholder: "9 digits",
+        medicineLabel: "Requested prescription / medicine name",
+        recentText: "The requested medicine has been prescribed to me within the last 3 months.",
+        feeText: "I understand that the prescription fee is HUF 5000 per prescription.",
+        sendButton: "Send",
+        note: "This page does not use cookies, trackers, or external services. Sending is handled through your own email application.",
+        emailIntro: "Prescription request details:",
+        emailName: "Name",
+        emailTaj: "Hungarian TAJ number",
+        emailMedicine: "Requested prescription / medicine",
+        emailStatements: "Statements:",
+        emailRecent: "- The requested medicine has been prescribed within the last 3 months.",
+        emailFee: "- The patient understands that the prescription fee is HUF 5000 per prescription.",
+        emailId: "Reference ID",
+        darkModeLabel: "Toggle dark mode",
+        languageLabel: "Change language"
+      }
+    };
+
+    let currentLanguage = "hu";
+
     function generateRxCode(length = 12) {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       const array = new Uint32Array(length);
@@ -141,37 +249,75 @@
       return code;
     }
 
+    function applyLanguage(language) {
+      currentLanguage = language;
+      const t = translations[language];
+
+      document.documentElement.lang = language;
+      document.title = t.pageTitle;
+
+      document.querySelectorAll("[data-i18n]").forEach(function(element) {
+        const key = element.getAttribute("data-i18n");
+        element.textContent = t[key];
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(function(element) {
+        const key = element.getAttribute("data-i18n-placeholder");
+        element.placeholder = t[key];
+      });
+
+      document.getElementById("languageToggle").textContent =
+        language === "hu" ? "🇭🇺" : "🇬🇧";
+
+      document.getElementById("darkModeToggle").setAttribute("aria-label", t.darkModeLabel);
+      document.getElementById("languageToggle").setAttribute("aria-label", t.languageLabel);
+    }
+
+    document.getElementById("darkModeToggle").addEventListener("click", function() {
+      document.body.classList.toggle("dark");
+
+      const isDark = document.body.classList.contains("dark");
+      document.getElementById("darkModeToggle").textContent = isDark ? "☀️" : "🌙";
+    });
+
+    document.getElementById("languageToggle").addEventListener("click", function() {
+      const nextLanguage = currentLanguage === "hu" ? "en" : "hu";
+      applyLanguage(nextLanguage);
+    });
+
     document.getElementById("prescriptionForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
-      const recipientEmail = "rendelo@example.hu"; 
-      // IDE ÍRD BE A SAJÁT E-MAIL CÍMEDET
+      const recipientEmail = "info@borgyogyasz.at";
+      
+      const t = translations[currentLanguage];
 
       const name = document.getElementById("name").value.trim();
       const taj = document.getElementById("taj").value.trim();
       const medicine = document.getElementById("medicine").value.trim();
 
       const rxCode = "RX-" + generateRxCode(12);
-
       const subject = rxCode;
 
-      const body =
-        "Receptkérés adatai:%0D%0A%0D%0A" +
-        "Név: " + encodeURIComponent(name) + "%0D%0A" +
-        "TAJ-szám: " + encodeURIComponent(taj) + "%0D%0A" +
-        "Kért recept / gyógyszer: " + encodeURIComponent(medicine) + "%0D%0A%0D%0A" +
-        "Nyilatkozatok:%0D%0A" +
-        "- A kért gyógyszer 3 hónapon belül fel volt írva.%0D%0A" +
-        "- A páciens megértette, hogy a recept díja 5000 Ft / recept.%0D%0A%0D%0A" +
-        "Azonosító: " + encodeURIComponent(rxCode);
+      const bodyText =
+        t.emailIntro + "\n\n" +
+        t.emailName + ": " + name + "\n" +
+        t.emailTaj + ": " + taj + "\n" +
+        t.emailMedicine + ": " + medicine + "\n\n" +
+        t.emailStatements + "\n" +
+        t.emailRecent + "\n" +
+        t.emailFee + "\n\n" +
+        t.emailId + ": " + rxCode;
 
       const mailtoLink =
         "mailto:" + encodeURIComponent(recipientEmail) +
         "?subject=" + encodeURIComponent(subject) +
-        "&body=" + body;
+        "&body=" + encodeURIComponent(bodyText);
 
       window.location.href = mailtoLink;
     });
+
+    applyLanguage("hu");
   </script>
 
 </body>
