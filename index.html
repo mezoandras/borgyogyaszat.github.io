@@ -97,12 +97,12 @@
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding-top: 118px;
+    padding-top: calc(2.4rem + 80px);
   }
   .hero-left {
     display: flex; flex-direction: column; justify-content: center;
     padding: 6rem 5rem 6rem 6rem;
-    background: var(--light);
+    background: #fff;
   }
   .hero-tag {
     display: inline-block;
@@ -588,6 +588,17 @@
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.addEventListener('click', () => links.classList.remove('open'));
   });
+
+  function fixHeroPadding() {
+    const banner = document.querySelector('.top-banner');
+    const nav = document.getElementById('navbar');
+    const hero = document.querySelector('.hero');
+    if (banner && nav && hero) {
+      hero.style.paddingTop = (banner.offsetHeight + nav.offsetHeight) + 'px';
+    }
+  }
+  fixHeroPadding();
+  window.addEventListener('resize', fixHeroPadding);
 </script>
 </body>
 </html>
