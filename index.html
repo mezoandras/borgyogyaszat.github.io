@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hu">
 <head>
@@ -357,9 +358,100 @@
 </head>
 <body>
 
-<div class="top-banner">
- Rendelésünk 2026. június 8-ig szünetel.
+
+
+
+ 
+  
+  <div class="top-banner">
+  <span id="status-text">⏳</span>
+  <span id="countdown-text"></span>
 </div>
+
+<script>
+  const HOURS = {
+    1: { open: [10,0], close: [14,0]  },   // Hétfő
+    3: { open: [10,0], close: [14,30] },   // Szerda
+    4: { open: [10,0], close: [14,30] },   // Csütörtök
+    5: { open: [10,0], close: [14,30] },   // Péntek
+  };
+
+  function getLocalTime() {
+    return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Budapest' }));
+  }
+
+  function nextOpening(now) {
+    for (let d = 1; d <= 7; d++) {
+      const candidate = new Date(now);
+      candidate.setDate(now.getDate() + d);
+      const dow = candidate.getDay();
+      if (HOURS[dow]) {
+        const [h, m] = HOURS[dow].open;
+        candidate.setHours(h, m, 0, 0);
+        return candidate;
+      }
+    }
+  }
+
+  function formatCountdown(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const parts = [];
+    if (h > 0) parts.push(h + ' óra');
+    if (m > 0) parts.push(m + ' perc');
+    parts.push(s + ' mp');
+    return parts.join(' ');
+  }
+
+  function update() {
+    const now = getLocalTime();
+    const dow = now.getDay();
+    const statusEl = document.getElementById('status-text');
+    const countdownEl = document.getElementById('countdown-text');
+
+    if (HOURS[dow]) {
+      const [oh, om] = HOURS[dow].open;
+      const [ch, cm] = HOURS[dow].close;
+      const openMin  = oh * 60 + om;
+      const closeMin = ch * 60 + cm;
+      const nowMin   = now.getHours() * 60 + now.getMinutes();
+
+      if (nowMin >= openMin && nowMin < closeMin) {
+        // NYITVA
+        const closeToday = new Date(now);
+        closeToday.setHours(ch, cm, 0, 0);
+        const remaining = closeToday - now;
+        statusEl.innerHTML = '<strong style="color:#fff">● Nyitva vagyunk</strong>';
+        countdownEl.textContent = '— még ' + formatCountdown(remaining);
+        statusEl.style.color = '#7ecf9a';
+        return;
+      }
+    }
+
+    // ZÁRVA — visszaszámláló
+    const next = nextOpening(now);
+    const diff = next - now;
+    const DAY_NAMES = ['vasárnap','hétfőn','kedden','szerdán','csütörtökön','pénteken','szombaton'];
+    const [nh, nm] = HOURS[next.getDay()].open;
+    const timeStr = nh + ':' + String(nm).padStart(2,'0');
+
+    statusEl.innerHTML = '● Jelenleg zárva';
+    statusEl.style.color = 'var(--blush)';
+    countdownEl.textContent =
+      '— nyitás ' + DAY_NAMES[next.getDay()] + ' ' + timeStr + '-kor · ' + formatCountdown(diff);
+  }
+
+  update();
+  setInterval(update, 1000);
+</script>
+
+
+
+
+
+
 
 <nav id="navbar">
   <a href="#" class="nav-brand">Bőrgyógyász<span>.at</span></a>
