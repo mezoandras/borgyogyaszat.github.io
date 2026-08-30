@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BNO-10 kereső</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#14232a">
 <style>
 :root{
   --ink:#14232A;
@@ -21,9 +22,9 @@
   --csillag:#55499A;
   --warn:#8A5A00;
   --warn-bg:#FBF1DE;
-  --display:"IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
-  --body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
-  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --display:"Arial Narrow", Arial, sans-serif;
+  --body:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, monospace;
   --r:3px;
 }
 *{box-sizing:border-box}
@@ -300,15 +301,15 @@ button,input{font:inherit;color:inherit}
   <div class="ctx">
     <span class="ctx-label">Beteg</span>
     <div class="seg" id="sexseg">
-      <button data-sex="2" aria-pressed="false">nő</button>
-      <button data-sex="1" aria-pressed="false">férfi</button>
+      <button type="button" data-sex="2" aria-pressed="false">nő</button>
+      <button type="button" data-sex="1" aria-pressed="false">férfi</button>
     </div>
     <div class="agewrap">
       <input id="age" type="number" min="0" max="120" placeholder="—">
       <span class="u">év</span>
     </div>
     <div class="ctx-state" id="ctxstate"><span class="dot"></span><span id="ctxtext">nincs beteg megadva — minden kód látszik</span></div>
-    <button class="linkbtn" id="ctxclear" hidden>kontextus törlése</button>
+    <button class="linkbtn" id="ctxclear" type="button" hidden>kontextus törlése</button>
   </div>
 </div>
 
@@ -319,16 +320,16 @@ button,input{font:inherit;color:inherit}
     <div class="resbar">
       <span class="count" id="count"></span>
       <span class="spacer"></span>
-      <button class="chip" id="fH" aria-pressed="false">csak 3-jegyű</button>
-      <button class="chip" id="fJ" aria-pressed="false">† / *</button>
-      <button class="chip" id="fU" aria-pressed="false">új 2022-ben</button>
-      <button class="chip" id="fE" aria-pressed="false">lejárt is</button>
+      <button class="chip" id="fH" type="button" aria-pressed="false">csak 3-jegyű</button>
+      <button class="chip" id="fJ" type="button" aria-pressed="false">† / *</button>
+      <button class="chip" id="fU" type="button" aria-pressed="false">új 2022-ben</button>
+      <button class="chip" id="fE" type="button" aria-pressed="false">lejárt is</button>
     </div>
     <div id="list"></div>
   </section>
 
   <aside class="detail" id="detail">
-    <button class="d-close" id="dclose">bezárás</button>
+    <button class="d-close" id="dclose" type="button">bezárás</button>
     <div id="dbody"></div>
   </aside>
 </div>

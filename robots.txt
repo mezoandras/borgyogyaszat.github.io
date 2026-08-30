@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /BNO.html
+Disallow: /meds.html
 
 Sitemap: https://borgyogyasz.at/sitemap.xml
