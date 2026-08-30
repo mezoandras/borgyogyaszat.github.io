@@ -79,6 +79,22 @@ nav {
 .nav-links a:hover {
   color: var(--dark);
 }
+.language-links {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-left: -1.25rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--dark-10);
+}
+.language-links a {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+.language-links a[aria-current="page"] {
+  color: var(--dark);
+  font-weight: 500;
+}
 .nav-cta {
   padding: 0.55rem 1.4rem;
   background: var(--dark);
@@ -579,6 +595,13 @@ footer {
   }
   .nav-links.open a {
     display: block;
+  }
+  .language-links {
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0.75rem 0 0;
+    border-top: 1px solid var(--dark-10);
+    border-left: 0;
   }
   .nav-toggle {
     display: flex;
