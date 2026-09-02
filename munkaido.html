@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Munkaidő-nyilvántartás</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
+    :root {
+      --ink: #182027;
+      --muted: #65707a;
+      --line: #9ba4ab;
+      --light: #eef1f2;
+      --accent: #1f5f61;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #e6eaec;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 18px auto;
+      padding: 10mm;
+      background: #fff;
+      box-shadow: 0 2px 14px rgb(0 0 0 / 14%);
+    }
+
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10mm;
+      padding-bottom: 4mm;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18pt;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin: 2mm 0 0;
+      color: var(--muted);
+      font-size: 9pt;
+    }
+
+    .period {
+      display: flex;
+      align-items: center;
+      gap: 2mm;
+      white-space: nowrap;
+      font-size: 10pt;
+      font-weight: 700;
+    }
+
+    .period select {
+      width: auto;
+      padding: 1.5mm 5mm 1.5mm 2mm;
+      font-weight: 700;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm 8mm;
+      margin: 5mm 0;
+    }
+
+    label {
+      display: flex;
+      align-items: baseline;
+      gap: 2mm;
+      font-size: 9pt;
+      font-weight: 700;
+    }
+
+    input, select {
+      border: 0;
+      border-bottom: 1px solid var(--ink);
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      outline: 0;
+    }
+
+    label input {
+      flex: 1;
+      min-width: 0;
+      padding: 1mm 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 8.5pt;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      height: 6.05mm;
+      padding: 0 1.6mm;
+    }
+
+    th {
+      height: 8mm;
+      background: var(--light);
+      color: #2d3a41;
+      font-size: 7.6pt;
+      letter-spacing: .025em;
+      line-height: 1.15;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    tbody tr.weekend td { background: #f8f9f9; }
+
+    td.day-number {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    td.day-name { text-transform: capitalize; }
+
+    td input {
+      width: 100%;
+      height: 5.2mm;
+      border: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    td.signature input { text-align: left; }
+
+    tfoot td {
+      height: 8.5mm;
+      background: var(--light);
+      font-weight: 700;
+    }
+
+    .total-label { text-align: left; }
+    .total-hours { text-align: center; }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14mm;
+      margin-top: 15mm;
+    }
+
+    .signature-line {
+      padding-top: 2.5mm;
+      border-top: 1px solid var(--ink);
+      color: var(--muted);
+      font-size: 8pt;
+      text-align: center;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      padding: 0 0 22px;
+    }
+
+    button {
+      margin: 0 5px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 4px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font: 700 14px Arial, sans-serif;
+    }
+
+    button.secondary { background: #54636b; }
+
+    @media print {
+      body { background: #fff; }
+      .page {
+        width: auto;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+      .actions { display: none; }
+      .period select { appearance: none; }
+    }
+
+    @media screen and (max-width: 700px) {
+      .page { width: 100%; min-height: auto; margin: 0; padding: 16px; }
+      header, .details, footer { grid-template-columns: 1fr; display: grid; }
+      .period { justify-content: start; }
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 650px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <h1>Munkaidő-nyilvántartás</h1>
+        <p class="subtitle">Napi jelenléti és munkaidő-összesítő</p>
+      </div>
+      <div class="period" aria-label="Időszak">
+        <select id="year" aria-label="Év"></select>
+        <span>év</span>
+        <select id="month" aria-label="Hónap"></select>
+        <span>hónap</span>
+      </div>
+    </header>
+
+    <section class="details" aria-label="Személyes adatok">
+      <label>Munkavállaló neve: <input type="text"></label>
+      <label>Munkáltató neve: <input type="text"></label>
+      <label>Munkakör: <input type="text"></label>
+      <label>Azonosító: <input type="text"></label>
+    </section>
+
+    <div class="table-wrap">
+      <table>
+        <colgroup>
+          <col style="width: 8%">
+          <col style="width: 17%">
+          <col style="width: 17%">
+          <col style="width: 17%">
+          <col style="width: 15%">
+          <col style="width: 26%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Nap</th>
+            <th>Hét napja</th>
+            <th>Munkaidő<br>megkezdése</th>
+            <th>Munkaidő<br>befejezése</th>
+            <th>Munkaórák</th>
+            <th>Aláírás</th>
+          </tr>
+        </thead>
+        <tbody id="days"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="total-label">Összes ledolgozott munkaóra:</td>
+            <td id="total-hours" class="total-hours"></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <footer>
+      <div class="signature-line">munkavállaló aláírása</div>
+      <div class="signature-line">munkáltató aláírása</div>
+    </footer>
+  </main>
+
+  <div class="actions">
+    <button type="button" class="secondary" id="clear">Űrlap törlése</button>
+    <button type="button" onclick="window.print()">Nyomtatás</button>
+  </div>
+
+  <script>
+    const monthNames = [
+      'január', 'február', 'március', 'április', 'május', 'június',
+      'július', 'augusztus', 'szeptember', 'október', 'november', 'december'
+    ];
+    const dayNames = ['vasárnap', 'hétfő', 'kedd', 'szerda', 'csütörtök', 'péntek', 'szombat'];
+    const yearSelect = document.querySelector('#year');
+    const monthSelect = document.querySelector('#month');
+    const daysBody = document.querySelector('#days');
+    const totalHours = document.querySelector('#total-hours');
+    const today = new Date();
+
+    for (let year = today.getFullYear() - 2; year <= today.getFullYear() + 5; year += 1) {
+      yearSelect.add(new Option(year, year));
+    }
+    monthNames.forEach((month, index) => monthSelect.add(new Option(month, index)));
+    yearSelect.value = today.getFullYear();
+    monthSelect.value = today.getMonth();
+
+    function calculateTotal() {
+      let totalMinutes = 0;
+      document.querySelectorAll('[data-hours]').forEach((hours) => {
+        const match = hours.value.trim().match(/^(\d+)(?::([0-5]\d))?$/);
+        if (!match) return;
+        totalMinutes += Number(match[1]) * 60 + Number(match[2] || 0);
+      });
+      totalHours.textContent = totalMinutes ? `${Math.floor(totalMinutes / 60)}:${String(totalMinutes % 60).padStart(2, '0')}` : '';
+    }
+
+    function fillDailyHours(row) {
+      const start = row.querySelector('[data-start]');
+      const end = row.querySelector('[data-end]');
+      const hours = row.querySelector('[data-hours]');
+      if (!start.value || !end.value) return;
+      const [startHour, startMinute] = start.value.split(':').map(Number);
+      const [endHour, endMinute] = end.value.split(':').map(Number);
+      let minutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+      if (minutes < 0) minutes += 24 * 60;
+      hours.value = `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
+    }
+
+    function renderDays() {
+      const year = Number(yearSelect.value);
+      const month = Number(monthSelect.value);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      daysBody.replaceChildren();
+
+      for (let day = 1; day <= daysInMonth; day += 1) {
+        const weekday = new Date(year, month, day).getDay();
+        const row = document.createElement('tr');
+        if (weekday === 0 || weekday === 6) row.className = 'weekend';
+        row.innerHTML = `
+          <td class="day-number">${day}.</td>
+          <td class="day-name">${dayNames[weekday]}</td>
+          <td><input type="text" inputmode="numeric" data-start aria-label="${day}. napi munkakezdés"></td>
+          <td><input type="text" inputmode="numeric" data-end aria-label="${day}. napi munkabefejezés"></td>
+          <td><input type="text" inputmode="decimal" data-hours aria-label="${day}. napi munkaórák"></td>
+          <td class="signature"><input type="text" aria-label="${day}. napi aláírás"></td>`;
+        daysBody.append(row);
+      }
+      calculateTotal();
+    }
+
+    yearSelect.addEventListener('change', renderDays);
+    monthSelect.addEventListener('change', renderDays);
+    daysBody.addEventListener('input', (event) => {
+      if (event.target.matches('[data-start], [data-end]')) fillDailyHours(event.target.closest('tr'));
+      if (event.target.matches('[data-start], [data-end], [data-hours]')) calculateTotal();
+    });
+    document.querySelector('#clear').addEventListener('click', () => {
+      document.querySelectorAll('input').forEach((input) => { input.value = ''; });
+      calculateTotal();
+    });
+
+    renderDays();
+  </script>
+</body>
+</html>
