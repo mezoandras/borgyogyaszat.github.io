@@ -165,6 +165,7 @@ nav.nav-ready {
 }
 .nav-toggle {
   display: none;
+  margin-left: auto;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -803,6 +804,63 @@ footer {
 .footer-languages a:hover {
   color: #fff;
 }
+@media (min-width: 901px) and (max-width: 1100px) {
+  nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+  }
+  nav.nav-ready {
+    display: flex;
+  }
+  .nav-links,
+  .nav-links.nav-ready {
+    display: none;
+  }
+  .nav-toggle {
+    display: flex;
+  }
+  .nav-links.nav-ready.open {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    background: var(--light);
+    border-bottom: 1px solid var(--dark-10);
+    padding: 1.5rem 2rem;
+  }
+  .nav-primary-item,
+  .nav-primary-links {
+    width: 100%;
+  }
+  .nav-primary-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .nav-controls {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--dark-10);
+  }
+  .nav-controls .theme-item {
+    margin-left: auto;
+  }
+  .nav-controls .language-links {
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+}
 @media (max-width: 900px) {
   nav {
     display: flex;
@@ -820,6 +878,9 @@ footer {
   }
   .nav-links.open {
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
     position: absolute;
     top: 100%;
     left: 0;
@@ -830,17 +891,22 @@ footer {
   }
   .nav-primary-item {
     display: block;
+    width: 100%;
   }
   .nav-primary-links {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
+    width: 100%;
   }
   .nav-controls {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--dark-10);
   }
   .nav-links.open a {
     display: block;
@@ -851,6 +917,9 @@ footer {
     padding: 0;
     border-top: 0;
     border-left: 0;
+  }
+  .nav-controls .theme-item {
+    margin-left: auto;
   }
   .nav-toggle {
     display: flex;
