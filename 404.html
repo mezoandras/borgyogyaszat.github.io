@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#2c3e4a">
+    <title>Az oldal nem található — Bőrgyógyász.at</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="not-found-page">
+    <div id="topbar">
+      <nav aria-label="Fő navigáció">
+        <a href="index.html" class="nav-brand">Bőrgyógyász<span>.at</span></a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html#magankendeles">Rendelőnk</a></li>
+          <li><a href="index.html#velemenyek">Vélemények</a></li>
+          <li><a href="index.html#arlista">Árlista</a></li>
+          <li><a href="index.html#kapcsolat">Kapcsolat</a></li>
+          <li><a href="idopont.html" class="nav-cta">Időpont</a></li>
+          <li class="language-links">
+            <a href="index.html" lang="hu" aria-current="page">HU</a>
+            <a href="en/index.html" lang="en">EN</a>
+            <a href="sr/index.html" lang="sr-Latn">SR</a>
+            <a href="ro/index.html" lang="ro">RO</a>
+          </li>
+        </ul>
+        <button
+          class="nav-toggle"
+          id="nav-toggle"
+          type="button"
+          aria-label="Menü"
+          aria-controls="nav-links"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+
+    <main class="error-main">
+      <section class="error-card" aria-labelledby="error-title">
+        <div class="error-copy">
+          <span class="hero-tag">404 — Elkóborolt oldal</span>
+          <div class="error-code" aria-hidden="true">404</div>
+          <h1 id="error-title">Hoppá, ezt az oldalt nem találjuk.</h1>
+          <p>
+            Úgy tűnik, ez az oldal egy kis kóborlásra indult. Menjünk vissza a
+            rendelőbe, ott biztosan megtaláljuk, amit keres.
+          </p>
+          <div class="hero-actions">
+            <a href="index.html" class="btn-primary">Vissza a főoldalra</a>
+            <a href="idopont.html" class="btn-outline">Időpontfoglalás</a>
+          </div>
+        </div>
+
+        <div class="error-illustration" aria-hidden="true">
+          <div class="error-spark error-spark-one">✦</div>
+          <div class="error-spark error-spark-two">•</div>
+          <svg viewBox="0 0 360 330" role="presentation">
+            <rect class="error-sheet-shadow" x="94" y="64" width="172" height="210" rx="27"/>
+            <rect class="error-sheet" x="88" y="54" width="172" height="210" rx="27"/>
+            <path class="error-fold" d="M218 54h42v42h-42z"/>
+            <path class="error-fold-line" d="M218 54v42h42"/>
+            <path class="error-map-line" d="M116 112c19-19 29 18 48-1s29 18 48-2"/>
+            <circle class="error-map-dot" cx="116" cy="112" r="5"/>
+            <circle class="error-eye" cx="135" cy="176" r="6"/>
+            <circle class="error-eye" cx="212" cy="176" r="6"/>
+            <path class="error-cheek" d="M112 198c8 5 15 5 22 1m72 0c7 4 14 4 22-1"/>
+            <path class="error-smile" d="M157 204c10 13 23 13 33 0"/>
+            <path class="error-arm" d="M88 214c-26 2-33 19-20 30 9 8 21 5 29-3"/>
+            <path class="error-arm" d="M260 207c25-3 34 11 25 24-7 10-20 9-29 2"/>
+            <path class="error-heart" d="M172 232c-13-12-27 7 0 23 27-16 13-35 0-23Z"/>
+          </svg>
+        </div>
+      </section>
+    </main>
+
+    <footer><p>© 2026 Bőrgyógyász.at · Powered by J3RC3K</p></footer>
+
+    <script>
+      const toggle = document.getElementById("nav-toggle");
+      const links = document.getElementById("nav-links");
+      const setMenuState = (isOpen) => {
+        links.classList.toggle("open", isOpen);
+        toggle.setAttribute("aria-expanded", String(isOpen));
+      };
+      toggle.addEventListener("click", () =>
+        setMenuState(!links.classList.contains("open")),
+      );
+      document.querySelectorAll(".nav-links a").forEach((link) =>
+        link.addEventListener("click", () => setMenuState(false)),
+      );
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && links.classList.contains("open")) {
+          setMenuState(false);
+          toggle.focus();
+        }
+      });
+    </script>
+  </body>
+</html>
