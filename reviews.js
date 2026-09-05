@@ -107,6 +107,7 @@ if (reviewsTrack && !reviewsTrack.children.length) {
 const reviewsMarquee = document.querySelector(".reviews-marquee");
 if (reviewsMarquee && reviewsTrack) {
   let isDragging = false;
+  let activeInput = null;
   let startX = 0;
   let startTranslate = 0;
   let translateX = 0;
@@ -131,30 +132,72 @@ if (reviewsMarquee && reviewsTrack) {
     reviewsTrack.style.transform = `translate3d(${translateX}px, 0, 0)`;
   };
 
-  reviewsMarquee.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
+  const beginDragging = (clientX, input, pointerId) => {
+    if (isDragging) return;
     isDragging = true;
-    startX = event.clientX;
+    activeInput = input;
+    startX = clientX;
     startTranslate = readTranslateX();
-    reviewsTrack.style.animationPlayState = "paused";
+    reviewsTrack.style.animation = "none";
+    reviewsTrack.style.transform = `translate3d(${startTranslate}px, 0, 0)`;
     reviewsMarquee.classList.add("is-dragging");
-    reviewsMarquee.setPointerCapture(event.pointerId);
-  });
-
-  reviewsMarquee.addEventListener("pointermove", (event) => {
-    if (!isDragging) return;
-    setTranslate(startTranslate + event.clientX - startX);
-  });
-
-  const stopDragging = (event) => {
-    if (!isDragging) return;
-    isDragging = false;
-    reviewsMarquee.classList.remove("is-dragging");
-    if (reviewsMarquee.hasPointerCapture(event.pointerId)) {
-      reviewsMarquee.releasePointerCapture(event.pointerId);
+    if (input === "pointer" && reviewsMarquee.setPointerCapture) {
+      reviewsMarquee.setPointerCapture(pointerId);
     }
   };
 
-  reviewsMarquee.addEventListener("pointerup", stopDragging);
-  reviewsMarquee.addEventListener("pointercancel", stopDragging);
+  const moveDragging = (clientX, event) => {
+    if (!isDragging) return;
+    setTranslate(startTranslate + clientX - startX);
+    if (event.cancelable) event.preventDefault();
+  };
+
+  const stopDragging = (pointerId) => {
+    if (!isDragging) return;
+    isDragging = false;
+    activeInput = null;
+    reviewsMarquee.classList.remove("is-dragging");
+    if (pointerId !== undefined && reviewsMarquee.hasPointerCapture?.(pointerId)) {
+      reviewsMarquee.releasePointerCapture(pointerId);
+    }
+  };
+
+  reviewsMarquee.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    beginDragging(event.clientX, "pointer", event.pointerId);
+  });
+  reviewsMarquee.addEventListener("pointermove", (event) => {
+    if (activeInput === "pointer") moveDragging(event.clientX, event);
+  });
+  reviewsMarquee.addEventListener("pointerup", (event) => stopDragging(event.pointerId));
+  reviewsMarquee.addEventListener("pointercancel", (event) => stopDragging(event.pointerId));
+  document.addEventListener("pointermove", (event) => {
+    if (activeInput === "pointer") moveDragging(event.clientX, event);
+  });
+  document.addEventListener("pointerup", (event) => {
+    if (activeInput === "pointer") stopDragging(event.pointerId);
+  });
+
+  reviewsMarquee.addEventListener("mousedown", (event) => {
+    if (event.button === 0) beginDragging(event.clientX, "mouse");
+  });
+  document.addEventListener("mousemove", (event) => {
+    if (activeInput === "mouse") moveDragging(event.clientX, event);
+  });
+  document.addEventListener("mouseup", () => {
+    if (activeInput === "mouse") stopDragging();
+  });
+
+  reviewsMarquee.addEventListener("touchstart", (event) => {
+    if (event.touches[0]) beginDragging(event.touches[0].clientX, "touch");
+  }, { passive: true });
+  document.addEventListener("touchmove", (event) => {
+    if (activeInput === "touch" && event.touches[0]) {
+      moveDragging(event.touches[0].clientX, event);
+    }
+  }, { passive: false });
+  document.addEventListener("touchend", () => {
+    if (activeInput === "touch") stopDragging();
+  });
+
 }
