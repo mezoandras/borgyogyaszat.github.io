@@ -66,6 +66,12 @@ const starLabel = {
   ro: "5 stele"
 }[locale] || "5 stars";
 
+document.querySelectorAll("img").forEach((image) => {
+  image.addEventListener("error", () => {
+    image.hidden = true;
+  });
+});
+
 const createReviewGroup = (isDuplicate = false) => {
   const group = document.createElement("div");
   group.className = "reviews-group";
