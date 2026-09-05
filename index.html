@@ -78,14 +78,16 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="theme-color" content="#2c3e4a">
     <link rel="stylesheet" href="styles.css">
+    <script src="reviews.js" defer></script>
   </head>
-  <body>
+  <body data-reviews-locale="hu">
     <div id="topbar">
       <nav aria-label="Fő navigáció">
         <a href="#hero" class="nav-brand">Bőrgyógyász<span>.at</span></a>
         <ul class="nav-links" id="nav-links">
-          <li><a href="#magankendeles">Rendelőnk</a></li>
-          <li><a href="#arlista">Árlista</a></li>
+           <li><a href="#magankendeles">Rendelőnk</a></li>
+           <li><a href="#velemenyek">Vélemények</a></li>
+           <li><a href="#arlista">Árlista</a></li>
           <li><a href="#gyik">GY.I.K.</a></li>
           <li><a href="#kapcsolat">Kapcsolat</a></li>
           <li>
@@ -209,6 +211,25 @@
               <a href="#kapcsolat" class="btn-outline">Kapcsolat</a>
             </div>
           </div>
+        </div>
+      </section>
+      <section id="velemenyek" class="reviews-section">
+        <div class="container reviews-container">
+          <div class="reviews-heading">
+            <span class="section-tag">Értékelések</span>
+            <h2 class="section-title">Pácienseink<br><em>véleménye</em></h2>
+            <p class="reviews-intro">
+              Pácienseink bizalma és elégedettsége számunkra a legnagyobb elismerés.
+            </p>
+          </div>
+          <div class="rating-summary" aria-label="Átlagos értékelés 4,8 csillag, 64 Google-értékelés">
+            <strong class="rating-score">4,8</strong>
+            <span class="rating-stars" aria-hidden="true">★★★★★</span>
+            <span class="rating-count">64 Google-értékelés alapján</span>
+          </div>
+        </div>
+        <div class="reviews-marquee" aria-label="Páciensvélemények">
+          <div class="reviews-track" id="reviews-track"></div>
         </div>
       </section>
       <section id="arlista">
@@ -648,6 +669,108 @@
       fixHeroPadding();
       window.addEventListener("resize", fixHeroPadding);
       window.addEventListener("load", fixHeroPadding);
+
+      const reviews = [
+        {
+          initial: "G",
+          author: "Georgina",
+          date: "2 hete",
+          text: "Nagyon jó szívvel ajánlom a Doktornőt! Kedves, türelmes és nagyon alapos, minden kérdésemre készségesen válaszolt. Szakmailag is maximálisan elégedett voltam vele, örülök, hogy rátaláltam."
+        },
+        {
+          initial: "K",
+          author: "Klára",
+          date: "5 hónapja",
+          text: "Ma jártam a doktornőnél, csak a legjobbakat tudom mondani róla, mindenkinek csak ajánlani tudom, aki bőrgyógyászt keres Szegeden!"
+        },
+        {
+          initial: "Z",
+          author: "Zita",
+          date: "egy éve",
+          text: "A Doktornő igazi nagybetűs ORVOS. Nagyon aranyos, türelmes, alapos. Nagyon örülök, hogy rátaláltam. Sokkal több ilyen orvos kellene az egészségügybe."
+        },
+        {
+          initial: "R",
+          author: "Rita",
+          date: "11 hónapja",
+          text: "Nagyon kedves, segítőkész, türelmes, nagy szaktudású orvos. Mindig elérhető, ha éppen nem érem el, akkor visszahív. Mindenkinek szívből ajánlom!"
+        },
+        {
+          initial: "P",
+          author: "Petra",
+          date: "egy éve",
+          text: "Soha nem találkoztam még ilyen alapos, türelmes és empatikus doktornővel. Szakmailag nagyon alapos, teljes odafigyeléssel foglalkozik betegeivel."
+        },
+        {
+          initial: "E",
+          author: "Erika",
+          date: "egy éve",
+          text: "Most voltam először a doktornőnél. Végtelenül kedves, aranyos, segítőkész bőrgyógyász, türelmes, nagy szaktudású orvos. Csak ajánlani tudom mindenkinek."
+        },
+        {
+          initial: "N",
+          author: "Nóra",
+          date: "6 éve",
+          text: "A legkedvesebb doktornő, akivel valaha találkoztam! Alapos, maximálisan figyel a betegre, emberséges! Csakis ajánlani tudom!"
+        },
+        {
+          initial: "S",
+          author: "Szilvia",
+          date: "2 éve",
+          text: "Fantasztikus a doktornő hozzáállása, empátiája és szakértelme is. Az egyik legjobb orvos, akivel valaha találkoztam. Profi csapat!"
+        },
+        {
+          initial: "L",
+          author: "Liza",
+          date: "egy éve",
+          text: "Évek óta a doktornőhöz járok. Végtelenül aranyos, kedves, maximálisan segítőkész, és bármikor problémám volt, mindig teljes bizalommal fordultam hozzá!"
+        },
+        {
+          initial: "A",
+          author: "Anita",
+          date: "5 éve",
+          text: "Mindenkinek ajánlom a Doktornőt! Nagyon kedves, emberséges, lehet bátran kérdezni, szakmailag felkészült, alapos. Az egész család hozzá jár."
+        },
+        {
+          initial: "E",
+          author: "Edit",
+          date: "5 éve",
+          text: "Rendkívül kedves és figyelmes a doktornő. Nagyon segítőkész, így öröm volt nála lenni. Köszönöm szépen az alapos vizsgálatot!"
+        },
+        {
+          initial: "Y",
+          author: "Yousef",
+          date: "4 éve",
+          text: "The doctor is so nice and has a great experience, I would totally recommend her."
+        }
+      ];
+
+      const createReviewGroup = (isDuplicate = false) => {
+        const group = document.createElement("div");
+        group.className = "reviews-group";
+        if (isDuplicate) group.setAttribute("aria-hidden", "true");
+        reviews.forEach(({ initial, author, date, text }) => {
+          const card = document.createElement("article");
+          card.className = "review-card";
+          card.innerHTML = `
+            <div class="review-header">
+              <div class="review-avatar" aria-hidden="true">${initial}</div>
+              <div>
+                <div class="review-author">${author}</div>
+                <div class="review-date">${date}</div>
+              </div>
+            </div>
+            <div class="review-stars" aria-label="5 csillag">★★★★★</div>
+            <p class="review-text">${text}</p>`;
+          group.append(card);
+        });
+        return group;
+      };
+
+      const reviewsTrack = document.getElementById("reviews-track");
+      if (!reviewsTrack.children.length) {
+        reviewsTrack.append(createReviewGroup(), createReviewGroup(true));
+      }
     </script>
   </body>
 </html>

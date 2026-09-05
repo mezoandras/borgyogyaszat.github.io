@@ -88,14 +88,16 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#2c3e4a">
     <link rel="stylesheet" href="../styles.css">
+    <script src="../reviews.js" defer></script>
   </head>
-  <body>
+  <body data-reviews-locale="en">
     <div id="topbar">
       <nav aria-label="Main navigation">
         <a href="#hero" class="nav-brand">Bőrgyógyász<span>.at</span></a>
         <ul class="nav-links" id="nav-links">
-          <li><a href="#magankendeles">Our Clinic</a></li>
-          <li><a href="#arlista">Price List</a></li>
+           <li><a href="#magankendeles">Our Clinic</a></li>
+           <li><a href="#velemenyek">Reviews</a></li>
+           <li><a href="#arlista">Price List</a></li>
           <li><a href="#gyik">FAQ</a></li>
           <li><a href="#kapcsolat">Contact</a></li>
           <li><a href="idopont.html" class="nav-cta">Appointment</a></li>
@@ -213,6 +215,25 @@
               <a href="#kapcsolat" class="btn-outline">Contact</a>
             </div>
           </div>
+        </div>
+      </section>
+      <section id="velemenyek" class="reviews-section">
+        <div class="container reviews-container">
+          <div class="reviews-heading">
+            <span class="section-tag">Reviews</span>
+            <h2 class="section-title">Our patients'<br><em>feedback</em></h2>
+            <p class="reviews-intro">
+              The trust and satisfaction of our patients are our greatest recognition.
+            </p>
+          </div>
+          <div class="rating-summary" aria-label="Average rating 4.8 stars, based on 64 Google reviews">
+            <strong class="rating-score">4.8</strong>
+            <span class="rating-stars" aria-hidden="true">★★★★★</span>
+            <span class="rating-count">Based on 64 Google reviews</span>
+          </div>
+        </div>
+        <div class="reviews-marquee" aria-label="Patient reviews">
+          <div class="reviews-track" id="reviews-track"></div>
         </div>
       </section>
       <section id="arlista">

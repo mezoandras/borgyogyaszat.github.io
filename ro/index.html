@@ -86,14 +86,16 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#2c3e4a">
     <link rel="stylesheet" href="../styles.css">
+    <script src="../reviews.js" defer></script>
   </head>
-  <body>
+  <body data-reviews-locale="ro">
     <div id="topbar">
       <nav aria-label="Navigare principală">
         <a href="#hero" class="nav-brand">Bőrgyógyász<span>.at</span></a>
         <ul class="nav-links" id="nav-links">
-          <li><a href="#magankendeles">Cabinetul nostru</a></li>
-          <li><a href="#arlista">Lista de prețuri</a></li>
+           <li><a href="#magankendeles">Cabinetul nostru</a></li>
+           <li><a href="#velemenyek">Recenzii</a></li>
+           <li><a href="#arlista">Lista de prețuri</a></li>
           <li><a href="#gyik">Întrebări frecvente</a></li>
           <li><a href="#kapcsolat">Contact</a></li>
           <li><a href="idopont.html" class="nav-cta">Programare</a></li>
@@ -175,6 +177,25 @@
               <a href="#kapcsolat" class="btn-outline">Contact</a>
             </div>
           </div>
+        </div>
+      </section>
+      <section id="velemenyek" class="reviews-section">
+        <div class="container reviews-container">
+          <div class="reviews-heading">
+            <span class="section-tag">Recenzii</span>
+            <h2 class="section-title">Părerile<br><em>pacienților noștri</em></h2>
+            <p class="reviews-intro">
+              Încrederea și satisfacția pacienților noștri sunt cea mai mare recunoaștere pentru noi.
+            </p>
+          </div>
+          <div class="rating-summary" aria-label="Evaluare medie 4,8 stele, pe baza a 64 de recenzii Google">
+            <strong class="rating-score">4,8</strong>
+            <span class="rating-stars" aria-hidden="true">★★★★★</span>
+            <span class="rating-count">Pe baza a 64 de recenzii Google</span>
+          </div>
+        </div>
+        <div class="reviews-marquee" aria-label="Părerile pacienților">
+          <div class="reviews-track" id="reviews-track"></div>
         </div>
       </section>
       <section id="arlista">

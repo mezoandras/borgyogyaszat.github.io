@@ -86,14 +86,16 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#2c3e4a">
     <link rel="stylesheet" href="../styles.css">
+    <script src="../reviews.js" defer></script>
   </head>
-  <body>
+  <body data-reviews-locale="sr">
     <div id="topbar">
       <nav aria-label="Glavna navigacija">
         <a href="#hero" class="nav-brand">Dermatolog<span>.at</span></a>
         <ul class="nav-links" id="nav-links">
-          <li><a href="#magankendeles">Naša ordinacija</a></li>
-          <li><a href="#arlista">Cenovnik</a></li>
+           <li><a href="#magankendeles">Naša ordinacija</a></li>
+           <li><a href="#velemenyek">Utisci</a></li>
+           <li><a href="#arlista">Cenovnik</a></li>
           <li><a href="#gyik">Česta pitanja</a></li>
           <li><a href="#kapcsolat">Kontakt</a></li>
           <li>
@@ -213,6 +215,25 @@
               <a href="#kapcsolat" class="btn-outline">Kontakt</a>
             </div>
           </div>
+        </div>
+      </section>
+      <section id="velemenyek" class="reviews-section">
+        <div class="container reviews-container">
+          <div class="reviews-heading">
+            <span class="section-tag">Recenzije</span>
+            <h2 class="section-title">Mišljenja naših<br><em>pacijenata</em></h2>
+            <p class="reviews-intro">
+              Poverenje i zadovoljstvo naših pacijenata za nas su najveće priznanje.
+            </p>
+          </div>
+          <div class="rating-summary" aria-label="Prosečna ocena 4,8 zvezdica na osnovu 64 Google recenzije">
+            <strong class="rating-score">4,8</strong>
+            <span class="rating-stars" aria-hidden="true">★★★★★</span>
+            <span class="rating-count">Na osnovu 64 Google recenzije</span>
+          </div>
+        </div>
+        <div class="reviews-marquee" aria-label="Mišljenja pacijenata">
+          <div class="reviews-track" id="reviews-track"></div>
         </div>
       </section>
       <section id="arlista">

@@ -267,6 +267,150 @@ section {
 #magankendeles {
   background: var(--light);
 }
+.reviews-section {
+  position: relative;
+  overflow: hidden;
+  padding: 7rem 0 6.5rem;
+  background:
+    radial-gradient(circle at 8% 15%, rgba(232, 165, 152, 0.15), transparent 27rem),
+    linear-gradient(180deg, #fff 0%, var(--light) 100%);
+}
+.reviews-container {
+  position: relative;
+  z-index: 1;
+}
+.reviews-heading {
+  max-width: 520px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+.reviews-heading .section-tag {
+  margin-bottom: 1rem;
+}
+.reviews-heading .section-title {
+  margin-bottom: 1rem;
+}
+.reviews-intro {
+  max-width: 390px;
+  margin: 0 auto;
+  color: var(--dark-60);
+  font-size: 0.95rem;
+}
+.rating-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.rating-score {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--dark);
+}
+.rating-stars,
+.review-stars {
+  color: var(--blush);
+  letter-spacing: 0.16em;
+}
+.rating-stars {
+  font-size: 1.3rem;
+}
+.rating-count {
+  color: var(--dark-60);
+  font-size: 0.82rem;
+}
+.reviews-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  cursor: grab;
+  padding: 1.5rem 0 2rem;
+  touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.reviews-marquee.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.reviews-track {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  will-change: transform;
+  animation: reviews-scroll 76s linear infinite;
+}
+.reviews-marquee:hover .reviews-track {
+  animation-play-state: paused;
+}
+.reviews-group {
+  display: flex;
+  align-items: stretch;
+  gap: 1.25rem;
+  padding-right: 1.25rem;
+}
+.review-card {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 330px;
+  min-height: 246px;
+  padding: 1.5rem 1.6rem;
+  background: #fff;
+  border: 1px solid var(--dark-10);
+  border-radius: 3px;
+  box-shadow: 0 12px 30px rgba(44, 62, 74, 0.06);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 34px rgba(44, 62, 74, 0.12);
+}
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+.review-avatar {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  margin-right: 0.75rem;
+  border-radius: 50%;
+  background: var(--dark);
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+}
+.review-author {
+  color: var(--dark);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.review-date {
+  color: var(--dark-60);
+  font-size: 0.75rem;
+}
+.review-stars {
+  margin-bottom: 0.7rem;
+  font-size: 0.98rem;
+}
+.review-text {
+  flex-grow: 1;
+  color: var(--dark-60);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+@keyframes reviews-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
@@ -657,6 +801,25 @@ footer {
   }
   .contact-map-placeholder {
     padding: 1.25rem;
+  }
+  .reviews-section {
+    padding: 5rem 0 4.5rem;
+  }
+  .review-card {
+    width: 286px;
+    min-height: 250px;
+    padding: 1.25rem;
+  }
+  .reviews-marquee {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  }
+  .rating-summary {
+    gap: 0.6rem;
+  }
+  .rating-count {
+    width: 100%;
+    text-align: center;
   }
 }
 @media (prefers-reduced-motion: reduce) {
