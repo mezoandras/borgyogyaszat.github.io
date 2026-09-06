@@ -34,6 +34,7 @@
     <meta name="theme-color" content="#2c3e4a">
     <link rel="stylesheet" href="styles.css">
     <script src="theme.js" defer></script>
+    <script src="nav.js" defer></script>
   </head>
   <body class="booking-page">
     <div id="topbar">
@@ -97,33 +98,10 @@
     </main>
 
     <footer>
-      <p>© 2026 Bőrgyógyász.at · Powered by J3RC3K</p>
+      <p>© <span id="copyright-year">2026</span> Bőrgyógyász.at · Powered by J3RC3K</p>
     </footer>
 
     <script>
-      const toggle = document.getElementById('nav-toggle');
-      const links = document.getElementById('nav-links');
-
-      const setMenuState = (isOpen) => {
-        links.classList.toggle('open', isOpen);
-        toggle.setAttribute('aria-expanded', String(isOpen));
-      };
-
-      toggle.addEventListener('click', () => {
-        setMenuState(!links.classList.contains('open'));
-      });
-
-      document.querySelectorAll('.nav-links a').forEach((link) => {
-        link.addEventListener('click', () => setMenuState(false));
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && links.classList.contains('open')) {
-          setMenuState(false);
-          toggle.focus();
-        }
-      });
-
       window.addEventListener('message', (event) => {
         if (event.origin !== 'https://app.minup.io') return;
 

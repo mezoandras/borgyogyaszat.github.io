@@ -88,6 +88,7 @@
     <link rel="stylesheet" href="../styles.css">
     <script src="../theme.js" defer></script>
     <script src="../reviews.js" defer></script>
+    <script src="../nav.js" defer></script>
   </head>
   <body data-reviews-locale="ro">
     <div id="topbar">
@@ -130,6 +131,8 @@
           <img
             src="../banner.jpg"
             alt="Cabinetul de dermatologie al dr. Krizsa Judit"
+            width="1500"
+            height="1500"
             fetchpriority="high"
             decoding="async"
           >
@@ -367,22 +370,23 @@
                 <div class="contact-value">
                   <table class="hours-table">
                     <tbody>
-                      <tr><th scope="row">Luni</th><td>10:00 – 14:00</td></tr>
-                      <tr class="closed"><th scope="row">Marți</th><td>închis</td></tr>
-                      <tr><th scope="row">Miercuri</th><td>10:00 – 14:00</td></tr>
-                      <tr><th scope="row">Joi</th><td>10:00 – 14:00</td></tr>
-                      <tr><th scope="row">Vineri</th><td>10:00 – 14:00</td></tr>
-                      <tr><th scope="row">Sâmbătă</th><td>10:00 – 13:00</td></tr>
-                      <tr class="closed"><th scope="row">Duminică</th><td>închis</td></tr>
+                      <tr data-weekday="monday"><th scope="row">Luni</th><td>10:00 – 14:00</td></tr>
+                      <tr class="closed" data-weekday="tuesday"><th scope="row">Marți</th><td>închis</td></tr>
+                      <tr data-weekday="wednesday"><th scope="row">Miercuri</th><td>10:00 – 14:00</td></tr>
+                      <tr data-weekday="thursday"><th scope="row">Joi</th><td>10:00 – 14:00</td></tr>
+                      <tr data-weekday="friday"><th scope="row">Vineri</th><td>10:00 – 14:00</td></tr>
+                      <tr data-weekday="saturday"><th scope="row">Sâmbătă</th><td>10:00 – 13:00</td></tr>
+                      <tr class="closed" data-weekday="sunday"><th scope="row">Duminică</th><td>închis</td></tr>
                     </tbody>
                   </table>
                   <div class="hours-note">Programul se poate modifica. Este necesară programarea în prealabil.</div>
+                  <div class="timezone-notice" role="note">Atenție: Programul este afișat conform orei din Szeged (fusul orar Europe/Budapest).</div>
                 </div>
               </div>
             </div>
             <div>
               <div class="contact-map-placeholder">
-                <img src="../rendelo.jpg" alt="Cabinet" loading="lazy" decoding="async">
+                <img src="../rendelo.jpg" alt="Cabinet" width="1448" height="1086" loading="lazy" decoding="async">
                 <div class="map-address">Szeged, Szent István tér 13</div>
                 <div>
                   <a href="idopont.html" class="btn-primary">Programare</a>
@@ -396,36 +400,6 @@
         </div>
       </section>
     </main>
-    <footer><p>© 2026 Bőrgyógyász.at · Powered by J3RC3K</p></footer>
-    <script>
-      const toggle = document.getElementById("nav-toggle");
-      const links = document.getElementById("nav-links");
-      const setMenuState = (isOpen) => {
-        links.classList.toggle("open", isOpen);
-        toggle.setAttribute("aria-expanded", String(isOpen));
-      };
-      toggle.addEventListener("click", () =>
-        setMenuState(!links.classList.contains("open")),
-      );
-      document
-        .querySelectorAll(".nav-links a")
-        .forEach((link) =>
-          link.addEventListener("click", () => setMenuState(false)),
-        );
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && links.classList.contains("open")) {
-          setMenuState(false);
-          toggle.focus();
-        }
-      });
-      function fixHeroPadding() {
-        const bar = document.getElementById("topbar");
-        const hero = document.getElementById("hero");
-        if (bar && hero) hero.style.paddingTop = `${bar.offsetHeight}px`;
-      }
-      fixHeroPadding();
-      window.addEventListener("resize", fixHeroPadding);
-      window.addEventListener("load", fixHeroPadding);
-    </script>
+    <footer><p>© <span id="copyright-year">2026</span> Bőrgyógyász.at · Powered by J3RC3K</p></footer>
   </body>
 </html>

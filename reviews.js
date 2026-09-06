@@ -111,6 +111,7 @@ if (reviewsMarquee && reviewsTrack) {
   let startX = 0;
   let startTranslate = 0;
   let translateX = 0;
+  const animationDuration = parseFloat(getComputedStyle(reviewsTrack).animationDuration) || 76;
 
   const readTranslateX = () => {
     const transform = getComputedStyle(reviewsTrack).transform;
@@ -160,6 +161,12 @@ if (reviewsMarquee && reviewsTrack) {
     if (pointerId !== undefined && reviewsMarquee.hasPointerCapture?.(pointerId)) {
       reviewsMarquee.releasePointerCapture(pointerId);
     }
+    const groupWidth = reviewsTrack.firstElementChild?.getBoundingClientRect().width;
+    reviewsTrack.style.transform = "";
+    reviewsTrack.style.animation = "";
+    reviewsTrack.style.animationDelay = groupWidth
+      ? `${-((-translateX / groupWidth) * animationDuration)}s`
+      : "";
   };
 
   reviewsMarquee.addEventListener("pointerdown", (event) => {

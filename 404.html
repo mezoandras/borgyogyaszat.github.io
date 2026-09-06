@@ -11,6 +11,7 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="stylesheet" href="styles.css">
     <script src="theme.js" defer></script>
+    <script src="nav.js" defer></script>
   </head>
   <body class="not-found-page">
     <div id="topbar">
@@ -80,27 +81,6 @@
       </section>
     </main>
 
-    <footer><p>© 2026 Bőrgyógyász.at · Powered by J3RC3K</p></footer>
-
-    <script>
-      const toggle = document.getElementById("nav-toggle");
-      const links = document.getElementById("nav-links");
-      const setMenuState = (isOpen) => {
-        links.classList.toggle("open", isOpen);
-        toggle.setAttribute("aria-expanded", String(isOpen));
-      };
-      toggle.addEventListener("click", () =>
-        setMenuState(!links.classList.contains("open")),
-      );
-      document.querySelectorAll(".nav-links a").forEach((link) =>
-        link.addEventListener("click", () => setMenuState(false)),
-      );
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && links.classList.contains("open")) {
-          setMenuState(false);
-          toggle.focus();
-        }
-      });
-    </script>
+    <footer><p>© <span id="copyright-year">2026</span> Bőrgyógyász.at · Powered by J3RC3K</p></footer>
   </body>
 </html>

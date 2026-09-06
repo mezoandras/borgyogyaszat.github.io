@@ -90,6 +90,7 @@
     <link rel="stylesheet" href="../styles.css">
     <script src="../theme.js" defer></script>
     <script src="../reviews.js" defer></script>
+    <script src="../nav.js" defer></script>
   </head>
   <body data-reviews-locale="en">
     <div id="topbar">
@@ -139,6 +140,8 @@
           <img
             src="../banner.jpg"
             alt="Dr. Judit Krizsa's dermatology clinic"
+            width="1500"
+            height="1500"
             fetchpriority="high"
             decoding="async"
           >
@@ -554,31 +557,31 @@
                 <div class="contact-value">
                   <table class="hours-table">
                     <tbody>
-                      <tr>
+                      <tr data-weekday="monday">
                         <th scope="row">Monday</th>
                         <td>10:00 - 14:00</td>
                       </tr>
-                      <tr class="closed">
+                      <tr class="closed" data-weekday="tuesday">
                         <th scope="row">Tuesday</th>
                         <td>closed</td>
                       </tr>
-                      <tr>
+                      <tr data-weekday="wednesday">
                         <th scope="row">Wednesday</th>
                         <td>10:00 - 14:00</td>
                       </tr>
-                      <tr>
+                      <tr data-weekday="thursday">
                         <th scope="row">Thursday</th>
                         <td>10:00 - 14:00</td>
                       </tr>
-                      <tr>
+                      <tr data-weekday="friday">
                         <th scope="row">Friday</th>
                         <td>10:00 - 14:00</td>
                       </tr>
-                      <tr>
+                      <tr data-weekday="saturday">
                         <th scope="row">Saturday</th>
                         <td>10:00 - 13:00</td>
                       </tr>
-                      <tr class="closed">
+                      <tr class="closed" data-weekday="sunday">
                         <th scope="row">Sunday</th>
                         <td>closed</td>
                       </tr>
@@ -586,6 +589,10 @@
                   </table>
                   <div class="hours-note">
                     Opening hours may change. Advance booking is required.
+                  </div>
+                  <div class="timezone-notice" role="note">
+                    Notice: Opening hours are shown in Szeged time
+                    (Europe/Budapest time zone).
                   </div>
                 </div>
               </div>
@@ -595,6 +602,8 @@
                 <img
                   src="../rendelo.jpg"
                   alt="Clinic"
+                  width="1448"
+                  height="1086"
                   loading="lazy"
                   decoding="async"
                 >
@@ -625,36 +634,6 @@
         </div>
       </section>
     </main>
-    <footer><p>&copy; 2026 Bőrgyógyász.at &middot; Powered by J3RC3K</p></footer>
-    <script>
-      const toggle = document.getElementById("nav-toggle");
-      const links = document.getElementById("nav-links");
-      const setMenuState = (isOpen) => {
-        links.classList.toggle("open", isOpen);
-        toggle.setAttribute("aria-expanded", String(isOpen));
-      };
-      toggle.addEventListener("click", () =>
-        setMenuState(!links.classList.contains("open")),
-      );
-      document
-        .querySelectorAll(".nav-links a")
-        .forEach((link) =>
-          link.addEventListener("click", () => setMenuState(false)),
-        );
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && links.classList.contains("open")) {
-          setMenuState(false);
-          toggle.focus();
-        }
-      });
-      function fixHeroPadding() {
-        const bar = document.getElementById("topbar");
-        const hero = document.getElementById("hero");
-        if (bar && hero) hero.style.paddingTop = `${bar.offsetHeight}px`;
-      }
-      fixHeroPadding();
-      window.addEventListener("resize", fixHeroPadding);
-      window.addEventListener("load", fixHeroPadding);
-    </script>
+    <footer><p>&copy; <span id="copyright-year">2026</span> Bőrgyógyász.at &middot; Powered by J3RC3K</p></footer>
   </body>
 </html>
