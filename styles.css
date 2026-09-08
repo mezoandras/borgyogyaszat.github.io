@@ -800,20 +800,150 @@ section {
   background: rgba(232, 165, 152, 0.2);
   color: #fff;
 }
-footer {
-  background: #1e2d37;
-  padding: 2rem 0;
-  text-align: center;
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0 1.5rem;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(200, 116, 103, 0.16), transparent 22rem),
+    #1e2d37;
+  color: rgba(253, 248, 245, 0.72);
+}
+.site-footer::before {
+  position: absolute;
+  top: 0;
+  left: max(2rem, calc((100% - 1100px) / 2));
+  width: 5rem;
+  height: 3px;
+  background: var(--blush);
+  content: "";
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.35fr) repeat(2, minmax(140px, 0.7fr)) minmax(220px, 1fr);
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+.footer-logo {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #fdf8f5;
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+.footer-logo span {
+  color: var(--blush);
+}
+.footer-brand p {
+  max-width: 270px;
+  margin-bottom: 1.25rem;
+  color: rgba(253, 248, 245, 0.64);
+  font-size: 0.88rem;
+  line-height: 1.75;
+}
+.footer-location {
+  color: rgba(253, 248, 245, 0.86);
   font-size: 0.78rem;
-  color: rgba(232, 165, 152, 0.6);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+}
+.footer-column h2,
+.footer-appointment h2 {
+  margin-bottom: 1.1rem;
+  color: #fdf8f5;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+.footer-column ul {
+  display: grid;
+  gap: 0.55rem;
+  list-style: none;
+}
+.footer-column a {
+  color: rgba(253, 248, 245, 0.64);
+  font-size: 0.84rem;
+  text-decoration: none;
+  transition: color 0.2s, padding-left 0.2s;
+}
+.footer-column a:hover {
+  padding-left: 0.25rem;
+  color: #fff;
+}
+.footer-appointment {
+  padding: 1.5rem;
+  background: rgba(253, 248, 245, 0.06);
+  border: 1px solid rgba(253, 248, 245, 0.12);
+  border-top: 2px solid var(--blush);
+}
+.footer-appointment h2 {
+  max-width: 210px;
+  margin-bottom: 1.4rem;
+  font-size: 1.45rem;
+  line-height: 1.25;
+}
+.footer-eyebrow {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--blush);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.footer-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #fdf8f5;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.footer-cta span {
+  color: var(--blush);
+  font-size: 1.1rem;
+  transition: transform 0.2s;
+}
+.footer-cta:hover span {
+  transform: translateX(0.2rem);
+}
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 2rem 0;
+  border-top: 1px solid rgba(253, 248, 245, 0.12);
+  color: rgba(232, 165, 152, 0.7);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.footer-bottom p {
+  margin: 0;
+}
+.footer-bottom a {
+  color: rgba(253, 248, 245, 0.64);
+  text-decoration: none;
+}
+.footer-bottom a:hover {
+  color: #fff;
 }
 .footer-languages {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.9rem;
-  margin-top: 0.8rem;
+  max-width: 1100px;
+  margin: 1.25rem auto 0;
   padding: 0;
   background: transparent;
   border: 0;
@@ -882,6 +1012,13 @@ footer {
     margin: 0;
     padding: 0;
     border: 0;
+  }
+  .footer-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .footer-brand,
+  .footer-appointment {
+    grid-column: span 2;
   }
 }
 @media (max-width: 900px) {
@@ -971,6 +1108,13 @@ footer {
   .contact-grid {
     gap: 3rem;
   }
+  .footer-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .footer-brand,
+  .footer-appointment {
+    grid-column: span 2;
+  }
 }
 @media (max-width: 600px) {
   section {
@@ -1017,6 +1161,32 @@ footer {
   .rating-count {
     width: 100%;
     text-align: center;
+  }
+  .site-footer {
+    padding-top: 4rem;
+  }
+  .site-footer::before {
+    left: 1rem;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+    padding-right: 1rem;
+    padding-bottom: 3rem;
+    padding-left: 1rem;
+  }
+  .footer-brand,
+  .footer-appointment {
+    grid-column: auto;
+  }
+  .footer-appointment {
+    padding: 1.25rem;
+  }
+  .footer-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-right: 1rem;
+    padding-left: 1rem;
   }
 }
 
