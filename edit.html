@@ -24,11 +24,11 @@
         .top-bar {
             background: linear-gradient(135deg, #4285f4, #3367d6);
             color: white;
-            padding: 8px 20px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             gap: 16px;
-            height: 56px;
+            min-height: 64px;
             flex-shrink: 0;
             box-shadow: 0 1px 4px rgba(0,0,0,0.15);
         }
@@ -39,16 +39,21 @@
         }
         .doc-title {
             flex: 1;
-            font-size: 18px;
+            min-width: 0;
+            font-size: 30px;
             font-weight: 400;
-            padding: 0 16px;
+            padding: 8px 16px;
             background: rgba(255,255,255,0.15);
             border-radius: 6px;
-            height: 36px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             cursor: text;
             transition: background 0.2s, box-shadow 0.2s;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            white-space: normal;
+            line-height: 1.25;
         }
         .doc-title:hover {
             background: rgba(255,255,255,0.25);
@@ -111,6 +116,64 @@
             height: 28px;
             background: #dadce0;
             margin: 0 10px;
+        }
+
+        /* Sablon gombsáv */
+        .template-bar {
+            background: #fff;
+            border-bottom: 1px solid #dadce0;
+            padding: 8px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .template-load-btn {
+            background: transparent;
+            border: 1px dashed #9aa0a6;
+            border-radius: 16px;
+            padding: 6px 14px;
+            font-size: 13.5px;
+            color: #3c4043;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s, border-color 0.15s;
+            flex-shrink: 0;
+        }
+        .template-load-btn:hover {
+            background: #f1f3f4;
+            border-color: #5f6368;
+        }
+        .template-empty {
+            font-size: 13px;
+            color: #9aa0a6;
+        }
+        .template-btn {
+            background: #e8f0fe;
+            color: #1967d2;
+            border: 1px solid #d2e3fc;
+            border-radius: 16px;
+            padding: 6px 14px;
+            font-size: 13.5px;
+            cursor: pointer;
+            transition: background 0.15s;
+            max-width: 260px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .template-btn:hover {
+            background: #d2e3fc;
+        }
+        .template-btn:active {
+            background: #aecbfa;
+        }
+        .template-btn.copied {
+            background: #ceead6;
+            color: #137333;
+            border-color: #a8dab5;
         }
 
         /* Szerkesztő terület */
@@ -176,7 +239,15 @@
         body.dark textarea { color: #e8eaed; }
         body.dark textarea::placeholder { color: #80868b; }
         body.dark .footer { background: #292a2d; color: #9aa0a6; border-top-color: #3c4043; }
+        body.dark .template-bar { background: #292a2d; border-bottom-color: #3c4043; }
+        body.dark .template-load-btn { color: #e8eaed; border-color: #5f6368; }
+        body.dark .template-load-btn:hover { background: #3c4043; }
+        body.dark .template-empty { color: #80868b; }
+        body.dark .template-btn { background: #2d3a4f; color: #8ab4f8; border-color: #3c4c63; }
+        body.dark .template-btn:hover { background: #37455c; }
+        body.dark .template-btn.copied { background: #1e3a2b; color: #81c995; border-color: #2d4d3a; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -188,15 +259,21 @@
         </div>
 
         <div class="toolbar">
+            <button onclick="newDocument()" aria-label="Új üres dokumentum">+ Új dokumentum</button>
             <button onclick="openFile()" aria-label="Fájl megnyitása">📂 Megnyitás</button>
             <button onclick="quickSave()" aria-label="Dokumentum mentése">💾 Mentés</button>
-            <button onclick="exportFile()" aria-label="Letöltés szövegfájlként">📤 Letöltés (.txt)</button>
+            <button onclick="exportText()" aria-label="Szöveg exportálása vágólapra">📤 Exportálás</button>
             <button onclick="printText()" aria-label="Dokumentum nyomtatása">🖨️ Nyomtatás</button>
 
             <div class="separator"></div>
 
             <button onclick="undo()" aria-label="Visszavonás">↩ Visszavonás</button>
             <button onclick="redo()" aria-label="Ismétlés">↪ Ismétlés</button>
+        </div>
+
+        <div class="template-bar" id="templateBar">
+            <button class="template-load-btn" onclick="openTemplateFile()" aria-label="Sablonok betöltése Excel fájlból">📑 Sablonok betöltése (.xlsx)</button>
+            <span class="template-empty" id="templateEmptyMsg">Még nincs sablon betöltve</span>
         </div>
 
         <div class="editor-area">
@@ -217,13 +294,17 @@
         const statusEl = document.getElementById('statusText');
         const statusDot = document.getElementById('statusDot');
         const wordCountEl = document.getElementById('wordCount');
+        const templateBar = document.getElementById('templateBar');
+        const templateEmptyMsg = document.getElementById('templateEmptyMsg');
 
         const STORAGE_KEY = 'simpleTextEditor_v9';
         const DARK_MODE_KEY = 'simpleTextEditor_darkMode';
+        const TEMPLATES_KEY = 'simpleTextEditor_templates';
         let currentFileName = "Névtelen dokumentum";
         let lastSavedContent = '';
         let storageAvailable = true;
         let debounceTimer = null;
+        let templates = []; // [{ name, text }, ...] az A/B oszlopokból
 
         // Egyszerű HTML escape XSS ellen (nyomtatás/cím beillesztésénél)
         function escapeHtml(str) {
@@ -350,26 +431,150 @@
             saveToLocalStorage();
         }
 
-        function exportFile() {
+        // ===== Sablonok (.xlsx) =====
+        // A oszlop: sablon neve (a menüben megjelenő szöveg), a 2. sortól kezdve
+        // B oszlop: a hozzá tartozó, beszúrandó szöveg
+        function openTemplateFile() {
+            if (typeof XLSX === 'undefined') {
+                statusEl.textContent = 'A sablonkönyvtár nem tölthető be (nincs internet-hozzáférés?)';
+                setTimeout(() => statusEl.textContent = 'Kész', 2500);
+                return;
+            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.xlsx,.xls';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const data = new Uint8Array(ev.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const sheetName = workbook.SheetNames[0];
+                        const sheet = workbook.Sheets[sheetName];
+                        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                        const parsed = [];
+                        // Az 1. sor fejléc (pl. "Menü" / "Szöveg"), az adatok a 2. sortól jönnek
+                        for (let i = 1; i < rows.length; i++) {
+                            const row = rows[i];
+                            if (!row) continue;
+                            const name = row[0];
+                            const text = row[1];
+                            if (name === undefined || name === null || String(name).trim() === '') continue;
+                            parsed.push({
+                                name: String(name).trim(),
+                                text: (text === undefined || text === null) ? '' : String(text)
+                            });
+                        }
+
+                        if (parsed.length === 0) {
+                            statusEl.textContent = 'Nem található érvényes sablon a fájlban (A2-től várjuk a neveket)';
+                            setTimeout(() => statusEl.textContent = 'Kész', 3000);
+                            return;
+                        }
+
+                        templates = parsed;
+                        populateTemplateMenu();
+                        saveTemplatesToStorage();
+                        statusEl.textContent = `${templates.length} sablon betöltve`;
+                        setTimeout(() => statusEl.textContent = 'Kész', 2000);
+                    } catch (err) {
+                        statusEl.textContent = 'Hiba a sablonfájl beolvasásakor';
+                        setTimeout(() => statusEl.textContent = 'Kész', 2500);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            };
+            input.click();
+        }
+
+        function populateTemplateMenu() {
+            // Töröljük a korábban generált gombokat (a betöltő gomb és üres üzenet marad)
+            const oldButtons = templateBar.querySelectorAll('.template-btn');
+            oldButtons.forEach(btn => btn.remove());
+
+            if (templates.length === 0) {
+                templateEmptyMsg.style.display = '';
+                return;
+            }
+            templateEmptyMsg.style.display = 'none';
+
+            templates.forEach((tpl, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'template-btn';
+                btn.textContent = tpl.name;
+                btn.title = tpl.name;
+                btn.setAttribute('aria-label', `${tpl.name} szövegének vágólapra másolása`);
+                btn.onclick = () => copyTemplateToClipboard(idx, btn);
+                templateBar.appendChild(btn);
+            });
+        }
+
+        function copyTemplateToClipboard(idx, btnEl) {
+            const tpl = templates[idx];
+            if (!tpl) return;
+            const finalText = replaceDatePlaceholder(tpl.text);
+            copyToClipboard(finalText, btnEl);
+        }
+
+        // A "*date*" jelölőt lecseréli a mai dátumra ÉÉÉÉ-HH-NN formátumban (pl. 2026-09-11)
+        function replaceDatePlaceholder(text) {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            const formatted = `${y}-${m}-${d}`;
+            return text.replace(/\*\s*date\s*\*/gi, formatted);
+        }
+
+        function copyToClipboard(text, btnEl) {
+            const showCopied = () => {
+                if (btnEl) {
+                    btnEl.classList.add('copied');
+                    setTimeout(() => btnEl.classList.remove('copied'), 900);
+                }
+                statusEl.textContent = 'Szöveg a vágólapra másolva';
+                setTimeout(() => statusEl.textContent = 'Kész', 1600);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(showCopied).catch(() => {
+                    statusEl.textContent = 'Vágólapra másolás sikertelen';
+                    setTimeout(() => statusEl.textContent = 'Kész', 2000);
+                });
+            } else {
+                statusEl.textContent = 'A böngésző nem támogatja a vágólap-hozzáférést';
+                setTimeout(() => statusEl.textContent = 'Kész', 2000);
+            }
+        }
+
+        function saveTemplatesToStorage() {
+            if (!storageAvailable) return;
+            try {
+                localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+            } catch (e) {}
+        }
+
+        function loadTemplatesFromStorage() {
+            if (!storageAvailable) return;
+            try {
+                const saved = localStorage.getItem(TEMPLATES_KEY);
+                if (saved) {
+                    templates = JSON.parse(saved) || [];
+                    populateTemplateMenu();
+                }
+            } catch (e) {}
+        }
+
+        function exportText() {
             if (textarea.value.trim() === '') {
-                statusEl.textContent = 'Nincs mit letölteni – a dokumentum üres';
+                statusEl.textContent = 'Nincs mit exportálni – a dokumentum üres';
                 setTimeout(() => statusEl.textContent = 'Kész', 2000);
                 return;
             }
-            let fileName = currentFileName === "Névtelen dokumentum" 
-                ? "dokumentum" 
-                : currentFileName.replace(/[^a-zA-Z0-9áéíóöőúüűÁÉÍÓÖŐÚÜŰ\s_-]/g, '_');
-            
-            const blob = new Blob([textarea.value], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName + '.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-
-            statusEl.textContent = `Letöltve: ${fileName}.txt`;
-            setTimeout(() => statusEl.textContent = 'Minden változás mentve', 2000);
+            copyToClipboard(textarea.value);
         }
 
         function printText() {
@@ -387,7 +592,39 @@
             setTimeout(() => win.print(), 300);
         }
 
-        function undo() { document.execCommand('undo'); }
+        let clearedDocStack = []; // {content, title} - "Új dokumentum" előtti állapotok, hogy a Visszavonás visszahozza
+
+        function newDocument() {
+            clearedDocStack.push({ content: textarea.value, title: currentFileName });
+            textarea.value = '';
+            currentFileName = "Névtelen dokumentum";
+            titleEl.textContent = currentFileName;
+            updateStats();
+            markUnsaved();
+            autoResizeTextarea();
+            if (storageAvailable) autoSave();
+            statusEl.textContent = 'Új üres dokumentum';
+            setTimeout(() => statusEl.textContent = 'Kész', 1500);
+            textarea.focus();
+        }
+
+        function undo() {
+            if (clearedDocStack.length > 0) {
+                const restored = clearedDocStack.pop();
+                textarea.value = restored.content;
+                currentFileName = restored.title;
+                titleEl.textContent = restored.title;
+                updateStats();
+                markUnsaved();
+                autoResizeTextarea();
+                if (storageAvailable) autoSave();
+                statusEl.textContent = 'Dokumentum visszaállítva';
+                setTimeout(() => statusEl.textContent = 'Kész', 1500);
+                textarea.focus();
+                return;
+            }
+            document.execCommand('undo');
+        }
         function redo() { document.execCommand('redo'); }
         function toggleDarkMode() {
             document.body.classList.toggle('dark');
@@ -446,6 +683,7 @@
             }
             updateStats();
             autoResizeTextarea();
+            loadTemplatesFromStorage();
             textarea.focus();
 
             // Cím kattintható
