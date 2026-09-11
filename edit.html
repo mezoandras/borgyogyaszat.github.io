@@ -4,25 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sima Szövegszerkesztő</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #F2F2F2;
+            --card: #FFFFFF;
+            --border: #E8E5E0;
+            --tx: #111110;
+            --mu: #7C7974;
+            --ac: #163576;
+            --ac-hover: #0F2657;
+            --ac-light: #E9EEF8;
+            --ok: #163576;
+            --er: #C0392B;
+            --er-lt: #FBEAE8;
+            --wa: #B7791F;
+            --wa-lt: #FEF3C7;
+            --dirty: #3B82F6;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background: #f8f9fa;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            font-family: 'Outfit', system-ui, -apple-system, Roboto, Arial, sans-serif;
         }
         .app {
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background: #ffffff;
+            background: var(--card);
         }
 
-        /* Felső kék sáv */
+        /* Felső sáv */
         .top-bar {
-            background: linear-gradient(135deg, #4285f4, #3367d6);
+            background: var(--ac);
             color: white;
             padding: 10px 20px;
             display: flex;
@@ -60,7 +79,7 @@
         }
         .doc-title.editing {
             background: white;
-            color: #202124;
+            color: var(--tx);
             box-shadow: 0 0 0 2px rgba(255,255,255,0.6);
         }
         .top-bar .icon-btn {
@@ -83,13 +102,13 @@
 
         /* Toolbar */
         .toolbar {
-            background: #fff;
-            border-bottom: 1px solid #dadce0;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
             padding: 8px 20px;
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             z-index: 10;
         }
         .toolbar button {
@@ -99,29 +118,30 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 14.5px;
-            color: #3c4043;
+            font-family: 'Outfit', system-ui, sans-serif;
+            color: var(--tx);
             display: flex;
             align-items: center;
             gap: 7px;
             transition: background 0.15s;
         }
         .toolbar button:hover {
-            background: #f1f3f4;
+            background: #F5F4F1;
         }
         .toolbar button:active {
-            background: #e8eaed;
+            background: #ECEAE6;
         }
         .toolbar .separator {
             width: 1px;
             height: 28px;
-            background: #dadce0;
+            background: var(--border);
             margin: 0 10px;
         }
 
         /* Sablon gombsáv */
         .template-bar {
-            background: #fff;
-            border-bottom: 1px solid #dadce0;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
             padding: 8px 20px;
             display: flex;
             flex-wrap: wrap;
@@ -130,11 +150,12 @@
         }
         .template-load-btn {
             background: transparent;
-            border: 1px dashed #9aa0a6;
+            border: 1px dashed var(--mu);
             border-radius: 16px;
             padding: 6px 14px;
             font-size: 13.5px;
-            color: #3c4043;
+            font-family: 'Outfit', system-ui, sans-serif;
+            color: var(--tx);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -143,20 +164,21 @@
             flex-shrink: 0;
         }
         .template-load-btn:hover {
-            background: #f1f3f4;
-            border-color: #5f6368;
+            background: #F5F4F1;
+            border-color: var(--tx);
         }
         .template-empty {
             font-size: 13px;
-            color: #9aa0a6;
+            color: var(--mu);
         }
         .template-btn {
-            background: #e8f0fe;
-            color: #1967d2;
-            border: 1px solid #d2e3fc;
+            background: var(--ac-light);
+            color: var(--ac);
+            border: 1px solid rgba(22,53,118,.18);
             border-radius: 16px;
             padding: 6px 14px;
             font-size: 13.5px;
+            font-family: 'Outfit', system-ui, sans-serif;
             cursor: pointer;
             transition: background 0.15s;
             max-width: 260px;
@@ -165,22 +187,22 @@
             white-space: nowrap;
         }
         .template-btn:hover {
-            background: #d2e3fc;
+            background: #D7DEF4;
         }
         .template-btn:active {
-            background: #aecbfa;
+            background: #C3CFEE;
         }
         .template-btn.copied {
-            background: #ceead6;
-            color: #137333;
-            border-color: #a8dab5;
+            background: var(--wa-lt);
+            color: var(--wa);
+            border-color: rgba(183,121,31,.25);
         }
 
         /* Szerkesztő terület */
         .editor-area {
             flex: 1;
             padding: 40px 90px;
-            background: #f8f9fa;
+            background: var(--bg);
             overflow-y: auto;
         }
         textarea {
@@ -189,10 +211,10 @@
             min-height: 100%;
             border: none;
             outline: none;
-            font-family: "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Outfit', system-ui, "Helvetica Neue", Arial, sans-serif;
             font-size: 18.2px;
             line-height: 1.78;
-            color: #1f1f1f;
+            color: var(--tx);
             resize: none;
             background: transparent;
             padding: 10px 0;
@@ -200,19 +222,20 @@
             display: block;
         }
         textarea::placeholder {
-            color: #9aa0a6;
+            color: var(--mu);
         }
 
         /* Lábléc */
         .footer {
-            background: #f1f3f4;
+            background: #F5F4F1;
             padding: 9px 25px;
             font-size: 13.5px;
-            color: #5f6368;
+            font-family: 'Outfit', system-ui, sans-serif;
+            color: var(--mu);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #dadce0;
+            border-top: 1px solid var(--border);
             flex-shrink: 0;
         }
         .footer .status-dot {
@@ -220,32 +243,32 @@
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #34a853;
+            background: var(--ac);
             margin-right: 6px;
             vertical-align: middle;
             transition: background 0.2s;
         }
         .footer .status-dot.unsaved {
-            background: #fbbc04;
+            background: var(--dirty);
         }
 
         /* Sötét mód */
-        body.dark .app { background: #202124; }
-        body.dark .top-bar { background: linear-gradient(135deg, #1a73e8, #174ea6); }
-        body.dark .toolbar { background: #292a2d; border-bottom-color: #3c4043; }
-        body.dark .toolbar button { color: #e8eaed; }
-        body.dark .toolbar button:hover { background: #3c4043; }
-        body.dark .editor-area { background: #292a2d; }
-        body.dark textarea { color: #e8eaed; }
-        body.dark textarea::placeholder { color: #80868b; }
-        body.dark .footer { background: #292a2d; color: #9aa0a6; border-top-color: #3c4043; }
-        body.dark .template-bar { background: #292a2d; border-bottom-color: #3c4043; }
-        body.dark .template-load-btn { color: #e8eaed; border-color: #5f6368; }
-        body.dark .template-load-btn:hover { background: #3c4043; }
-        body.dark .template-empty { color: #80868b; }
-        body.dark .template-btn { background: #2d3a4f; color: #8ab4f8; border-color: #3c4c63; }
-        body.dark .template-btn:hover { background: #37455c; }
-        body.dark .template-btn.copied { background: #1e3a2b; color: #81c995; border-color: #2d4d3a; }
+        body.dark .app { background: #101B33; }
+        body.dark .top-bar { background: #0F2657; }
+        body.dark .toolbar { background: #142A52; border-bottom-color: #223864; }
+        body.dark .toolbar button { color: #F2F2F2; }
+        body.dark .toolbar button:hover { background: #1C3660; }
+        body.dark .editor-area { background: #0D1830; }
+        body.dark textarea { color: #F2F2F2; }
+        body.dark textarea::placeholder { color: #7C90B8; }
+        body.dark .footer { background: #142A52; color: #A8B7D6; border-top-color: #223864; }
+        body.dark .template-bar { background: #142A52; border-bottom-color: #223864; }
+        body.dark .template-load-btn { color: #F2F2F2; border-color: #7C90B8; }
+        body.dark .template-load-btn:hover { background: #1C3660; }
+        body.dark .template-empty { color: #7C90B8; }
+        body.dark .template-btn { background: #1C3660; color: #7FA0E4; border-color: #2C4C82; }
+        body.dark .template-btn:hover { background: #24467D; }
+        body.dark .template-btn.copied { background: #3A2A0F; color: #E8B95C; border-color: #5A431C; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -584,7 +607,7 @@
             win.document.write(`
                 <html><head><title>${safeTitle}</title>
                 <style>
-                    body { font-family: "Segoe UI", Arial, sans-serif; font-size: 18px; line-height: 1.75; padding: 60px; white-space: pre-wrap; }
+                    body { font-family: 'Outfit', system-ui, Arial, sans-serif; font-size: 18px; line-height: 1.75; padding: 60px; white-space: pre-wrap; }
                 </style>
                 </head><body>${safeContent}</body></html>
             `);
