@@ -24,13 +24,15 @@
 
   const topbar = document.getElementById("topbar");
   const hero = document.getElementById("hero");
-  if (topbar && hero) {
-    const fixHeroPadding = () => {
-      hero.style.paddingTop = `${topbar.offsetHeight}px`;
+  if (topbar) {
+    const syncTopbarHeight = () => {
+      const height = `${topbar.offsetHeight}px`;
+      document.documentElement.style.setProperty("--topbar-height", height);
+      if (hero) hero.style.paddingTop = height;
     };
-    fixHeroPadding();
-    window.addEventListener("resize", fixHeroPadding);
-    window.addEventListener("load", fixHeroPadding);
+    syncTopbarHeight();
+    window.addEventListener("resize", syncTopbarHeight);
+    window.addEventListener("load", syncTopbarHeight);
   }
 
   const copyrightYear = document.getElementById("copyright-year");

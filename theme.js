@@ -53,6 +53,59 @@
 
   const languageLinks = document.querySelector(".language-links");
   if (languageLinks?.parentElement) {
+    const languageCopy = {
+      hu: { button: "Nyelvválasztás", names: { hu: "Magyar", en: "English", "sr-Latn": "Szerb", ro: "Română" } },
+      en: { button: "Language selection", names: { hu: "Magyar", en: "English", "sr-Latn": "Serbian", ro: "Romanian" } },
+      "sr-Latn": { button: "Izbor jezika", names: { hu: "Mađarski", en: "Engleski", "sr-Latn": "Srpski", ro: "Rumunski" } },
+      ro: { button: "Selectarea limbii", names: { hu: "Maghiară", en: "Engleză", "sr-Latn": "Sârbă", ro: "Română" } },
+    };
+    const languageOptions = {
+      hu: { code: "HU", flag: "🇭🇺" },
+      en: { code: "EN", flag: "🇬🇧" },
+      "sr-Latn": { code: "SR", flag: "🇷🇸" },
+      ro: { code: "RO", flag: "🇷🇴" },
+    };
+    const language = document.documentElement.lang || "hu";
+    const languageLabels = languageCopy[language] || languageCopy.hu;
+    const languageToggle = document.createElement("button");
+    const languageMenu = document.createElement("div");
+    languageLinks.classList.add("language-picker");
+    languageToggle.className = "language-toggle";
+    languageToggle.type = "button";
+    languageToggle.setAttribute("aria-haspopup", "true");
+    languageToggle.setAttribute("aria-expanded", "false");
+    languageToggle.setAttribute("aria-label", languageLabels.button);
+    languageToggle.title = languageLabels.button;
+    languageToggle.innerHTML = `<svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.2 2.4 3.3 5.4 3.3 9s-1.1 6.6-3.3 9c-2.2-2.4-3.3-5.4-3.3-9S9.8 5.4 12 3Z"></path></svg>`;
+    languageMenu.className = "language-menu";
+    languageMenu.hidden = true;
+    languageLinks.querySelectorAll("a").forEach((link) => {
+      const linkLanguage = link.lang === "sr" || link.lang === "sr-Latn" ? "sr-Latn" : link.lang;
+      const option = languageOptions[linkLanguage];
+      link.textContent = option ? `${option.code} ${option.flag}` : link.textContent;
+      link.setAttribute("aria-label", languageLabels.names[linkLanguage] || link.textContent);
+      link.dataset.language = linkLanguage;
+      languageMenu.append(link);
+    });
+    languageLinks.append(languageToggle, languageMenu);
+
+    const setLanguageMenu = (isOpen) => {
+      languageMenu.hidden = !isOpen;
+      languageToggle.setAttribute("aria-expanded", String(isOpen));
+    };
+    languageToggle.addEventListener("click", () => {
+      setLanguageMenu(languageMenu.hidden);
+    });
+    document.addEventListener("click", (event) => {
+      if (!languageLinks.contains(event.target)) setLanguageMenu(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !languageMenu.hidden) {
+        setLanguageMenu(false);
+        languageToggle.focus();
+      }
+    });
+
     const themeItem = document.createElement("li");
     themeItem.className = "theme-item";
     const button = document.createElement("button");

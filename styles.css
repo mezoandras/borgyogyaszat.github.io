@@ -51,7 +51,8 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 4rem;
+  width: 100%;
+  padding: 1.25rem max(2rem, calc((100% - 1200px) / 2 + 2rem));
   background: #fdf8f5;
   border-bottom: 1px solid var(--dark-10);
 }
@@ -102,20 +103,64 @@ nav.nav-ready {
   color: var(--dark);
 }
 .language-links {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
+  position: relative;
+  display: block;
   margin-left: -1.25rem;
   padding-left: 1.25rem;
   border-left: 1px solid var(--dark-10);
 }
 .language-links a {
+  display: block;
+  padding: 0.35rem 0.75rem;
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 .language-links a[aria-current="page"] {
   color: var(--dark);
   font-weight: 500;
+}
+.language-toggle {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--dark-30);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dark);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.language-toggle:hover {
+  background: var(--dark-06);
+  border-color: var(--blush);
+}
+.language-toggle svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+.language-menu {
+  position: absolute;
+  top: calc(100% + 0.7rem);
+  right: 0;
+  z-index: 10;
+  min-width: 8.5rem;
+  padding: 0.35rem;
+  background: var(--light);
+  border: 1px solid var(--dark-10);
+  box-shadow: 0 0.75rem 2rem rgba(44, 62, 74, 0.12);
+}
+.language-menu a:hover,
+.language-menu a[aria-current="page"] {
+  background: var(--dark-06);
+  color: var(--dark);
 }
 .theme-toggle {
   width: 2rem;
@@ -143,7 +188,7 @@ nav.nav-ready {
   grid-column: 3;
   align-items: center;
   justify-self: end;
-  gap: 1.25rem;
+  gap: 0.625rem;
   list-style: none;
 }
 .nav-controls .language-links {
@@ -207,8 +252,13 @@ nav.nav-ready {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 6rem 5rem 6rem 6rem;
+  /* A bal oszlop a hero fele, ezért a nav 1200px-es képletében (100% - 1200px) / 2
+     itt 100% - 600px szerepel. Így a szöveg a navigáció logójával egy vonalban indul. */
+  padding: 6rem 5rem 6rem max(2rem, calc(100% - 600px + 2rem));
   background: #fff;
+}
+.hero-left > * {
+  max-width: min(460px, 100%);
 }
 .hero-tag,
 .section-tag {
@@ -234,6 +284,7 @@ nav.nav-ready {
   line-height: 1.1;
   color: var(--dark);
   margin-bottom: 1rem;
+  overflow-wrap: anywhere;
 }
 .hero h1 em {
   font-style: italic;
@@ -305,7 +356,7 @@ section {
   scroll-margin-top: 96px;
 }
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -812,7 +863,7 @@ section {
 .site-footer::before {
   position: absolute;
   top: 0;
-  left: max(2rem, calc((100% - 1100px) / 2));
+  left: max(2rem, calc((100% - 1200px) / 2));
   width: 5rem;
   height: 3px;
   background: var(--blush);
@@ -822,7 +873,7 @@ section {
   display: grid;
   grid-template-columns: minmax(220px, 1.35fr) repeat(2, minmax(140px, 0.7fr)) minmax(220px, 1fr);
   gap: 3rem;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem 4rem;
 }
@@ -919,7 +970,7 @@ section {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 1.25rem 2rem 0;
   border-top: 1px solid rgba(253, 248, 245, 0.12);
@@ -942,7 +993,7 @@ section {
   align-items: center;
   justify-content: center;
   gap: 0.9rem;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 1.25rem auto 0;
   padding: 0;
   background: transparent;
@@ -1008,7 +1059,6 @@ section {
     margin-left: auto;
   }
   .nav-controls .language-links {
-    gap: 0.85rem;
     margin: 0;
     padding: 0;
     border: 0;
@@ -1068,11 +1118,13 @@ section {
     padding-top: 1rem;
     border-top: 1px solid var(--dark-10);
   }
-  .nav-links.open a {
+  .nav-links.open a:not(.nav-cta) {
     display: block;
   }
+  .nav-links.open .nav-cta {
+    display: inline-block;
+  }
   .language-links {
-    gap: 0.85rem;
     margin: 0;
     padding: 0;
     border-top: 0;
@@ -1114,6 +1166,24 @@ section {
   .footer-brand,
   .footer-appointment {
     grid-column: span 2;
+  }
+}
+@media (max-width: 1100px) {
+  /* A #topbar fixed, ezért a nyitott menü csak a saját görgetésével érhető el,
+     ha alacsony a képernyő (pl. fekvő telefon). */
+  .nav-links.open,
+  .nav-links.nav-ready.open {
+    max-height: calc(100svh - var(--topbar-height, 7rem));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  /* A menü overflow miatt a legördülő nyelvválasztó nem lóghat ki lefelé,
+     és a bal oldali gombhoz igazítva nem lóghat ki a képernyőn kívülre sem. */
+  .language-menu {
+    top: auto;
+    right: auto;
+    bottom: calc(100% + 0.5rem);
+    left: 0;
   }
 }
 @media (max-width: 600px) {
