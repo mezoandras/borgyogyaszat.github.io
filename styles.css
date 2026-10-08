@@ -1713,3 +1713,12 @@ section.booking {
     gap: 0.2rem;
   }
 }
+
+/* ===== Felső figyelmeztető sáv (.site-notice) =====
+   KAPCSOLÓ: a sáv jelenleg KIKAPCSOLVA.
+   Bekapcsoláshoz töröld (vagy kommenteld ki) az alábbi szabályt.
+   A szöveget oldalanként a #topbar <aside class="site-notice"> elemében kell frissíteni
+   (index.html, idopont.html, valamint en/, sr/, ro/ alatt ugyanezek). */
+.site-notice {
+  display: none;
+}
